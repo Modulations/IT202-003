@@ -13,7 +13,6 @@ function processArray($arr) {
             echo "<br>" . $arr[$x] . "<br>";
         }
     }
-    // end
 }
 echo "Problem 1: Odd Output<br>";
 ?>
