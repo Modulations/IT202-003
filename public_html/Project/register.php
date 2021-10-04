@@ -21,6 +21,7 @@
     function validate(form) {
         //TODO 1: implement JavaScript validation
         //ensure it returns false for an error and true for success
+        
 
         return true;
     }
@@ -46,5 +47,6 @@
         if (strlen($password) > 0 && $password !== $confirm) { array_push($errors, "Passwords don't match."); }
         if (count($errors) > 0) { echo "<pre>" . var_export($errors, true) . "</pre>"; }
         else { echo "Welcome, $email"; }
+        // TODO 4
     }
 ?>
