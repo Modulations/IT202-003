@@ -8,16 +8,17 @@
         window.addEventListener("load", () => {
             console.log("loaded via javascript");
             //TODO: add any extra onload processing you may need here
-            console.log(location.hash);
-            if(location.hash) {
-                updateCurrentPage(location.hash);
-            }
+            window.addEventListener("hashchange", getCurrentSelection, false);
         });
         function getCurrentSelection() {
             setTimeout(() => {
                 //added this delay here as some solutions may require it to update properly (i.e., click code may complete before the navigation changes)
                 //TODO: add code for processing the current selection
-
+                if(location.hash) { // if there is a url#locationHash
+                    // cut off the leading # and push
+                    updateCurrentPage(location.hash.substring(1));
+                    //console.log(document.getElementsByTagName("title"));
+                }
                 //Note: likely you'll want to call updateCurrentPage towards the end
             }, 100);
         }
