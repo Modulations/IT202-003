@@ -85,6 +85,57 @@ https://docs.google.com/document/d/1e5xIGBrQflycZfNOabpNzGQ0rYx7pJv2nA6-BG-YSnA/
         - Hint: logic for the password check would be similar to login
 
 - Milestone 2
+  - Create the Accounts table (id, account_number [unique, always 12 characters], user_id, balance (default 0), account_type, created, modified)
+  - Project setup steps:
+    - Create these as initial setup scripts in the sql folder
+      - Create a system user if they don’t exist (this will never be logged into, it’s just to keep things working per system requirements)
+      - Create a world account in the Accounts table created below (if it doesn’t exist)
+        - Account_number must be “000000000000”
+        - User_id must be the id of the system user
+        - Account type must be “world”
+  - Create the Transactions table (see reference below)
+  - Dashboard page
+    - Will have links for Create Account, My Accounts, Deposit, Withdraw Transfer, Profile
+      - Links that don’t have pages yet should just have href=”#”, you’ll update them later
+  - User will be able to create a checking account
+    - System will generate a unique 12 digit account number
+      - Options (strike out the option you won’t do):
+        - Option 1: Generate a random 12 digit/character value; must regenerate if a duplicate - collision occurs
+        - ~~Option 2: Generate the number based on the id column; requires inserting a null first to - get the last insert id, then update the record immediately after~~
+    - System will associate the account to the user
+    - Account type will be set as checking
+    - Will require a minimum deposit of $5 (from the world account)
+      - Entry will be recorded in the Transaction table as a transaction pair (per notes below)
+      - Account Balance will be updated based on SUM of BalanceChange of AccountSrc
+    - User will see user-friendly error messages when appropriate
+    - User will see user-friendly success message when account is created successfully
+      - Redirect user to their Accounts page
+  - User will be able to list their accounts
+    - Limit results to 5 for now
+    - Show account number, account type and balance
+  - User will be able to click an account for more information (a.ka. Transaction History page)
+    - Show account number, account type, balance, opened/created date
+    - Show transaction history (from Transactions table)
+      - For now limit results to 10 latest
+  - User will be able to deposit/withdraw from their account(s)
+    - Form should have a dropdown of their accounts to pick from
+      - World account should not be in the dropdown
+    - Form should have a field to enter a positive numeric value
+      - For now, allow any deposit value (0 - inf)
+    - For withdraw, add a check to make sure they can’t withdraw more money than the account has
+    - Form should allow the user to record a memo for the transaction
+    - Each transaction is recorded as a transaction pair in the Transaction table per the - details below
+      - These will reflect on the transaction history page (Account page’s “more info”)
+      - After each transaction pair, make sure to update the Account Balance by SUMing the BalanceChange for the AccountSrc
+      - This will be done after the insert
+      - Deposits will be from the “world account”
+        - Must fetch the world account to get the id (do not hard code the id as it may change if the application migrates or gets rebuilt)
+      - Withdraws will be to the “world account”
+        - Must fetch the world account to get the id (do not hard code the id as it may change if the application migrates or gets rebuilt)
+      - Transaction type should show accordingly (deposit/withdraw)
+    - Show appropriate user-friendly error messages
+    - Show user-friendly success messages
+
 - Milestone 3
 - Milestone 4
 ### Intructions
