@@ -137,6 +137,35 @@ https://docs.google.com/document/d/1e5xIGBrQflycZfNOabpNzGQ0rYx7pJv2nA6-BG-YSnA/
     - Show user-friendly success messages
 
 - Milestone 3
+  - User will be able to transfer between their accounts
+    - Form should include a dropdown first AccountSrc and a dropdown for AccountDest (only accounts the user owns; no world account)
+    - Form should include a field for a positive numeric value
+    - System shouldn’t allow the user to transfer more funds than what’s available in     AccountSrc
+    - Form should allow the user to record a memo for the transaction
+    - Each transaction is recorded as a transaction pair in the Transaction table
+    - These will reflect in the transaction history page
+    - Show appropriate user-friendly error messages
+    - Show user-friendly success messages
+  - Transaction History page
+    - Will show the latest 10 transactions by default
+    - User will be able to filter transactions between two dates
+    - User will be able to filter transactions by type (deposit, withdraw, transfer)
+    - Transactions should paginate results after the initial 10
+  - User’s profile page should record/show First and Last name
+  - User will be able to transfer funds to another user’s account
+    - Form should include a dropdown of the current user’s accounts (as AccountSrc)
+    - Form should include a field for the destination user’s last name
+    - Form should include a field for the last 4 digits of the destination user’s account number (to lookup AccountDest)
+    - Form should include a field for a positive numerical value
+    - Form should allow the user to record a memo for the transaction
+    - System shouldn’t let the user transfer more than the balance of their account
+    - System will lookup appropriate account based on destination user’s last name and the last 4 digits of the account number
+    - Show appropriate user-friendly error messages
+    - Show user-friendly success messages
+    - Transaction will be recorded with the type as “ext-transfer”
+    - Each transaction is recorded as a transaction pair in the Transaction table
+      - These will reflect in the transaction history page
+
 - Milestone 4
 ### Intructions
 #### Don't delete this
