@@ -167,6 +167,62 @@ https://docs.google.com/document/d/1e5xIGBrQflycZfNOabpNzGQ0rYx7pJv2nA6-BG-YSnA/
       - These will reflect in the transaction history page
 
 - Milestone 4
+  - User can set their profile to be public or private (will need another column in Users table)
+    - If public, hide email address from other users
+  - User will be able open a savings account
+    - System will generate a 12 digit/character account number per the existing rules (see Checking Account above)
+    - System will associate the account to the user
+    - Account type will be set as savings
+    - Will require a minimum deposit of $5 (from the world account)
+      - Entry will be recorded in the Transaction table in a transaction pair (per notes below)
+      - Account Balance will be updated based on SUM of BalanceChange of AccountSrc
+    - System sets an APY that’ll be used to calculate monthly interest based on the balance of the account
+      - Recommended to create a table for “system properties” and have this value stored there and fetched when needed, this will allow you to have an admin account change the value in the future)
+    - User will see user-friendly error messages when appropriate
+    - User will see user-friendly success message when account is created successfully
+      - Redirect user to their Accounts page
+  - User will be able to take out a loan
+    - System will generate a 12 digit/character account number per the existing rules (see Checking Account above)
+    - Account type will be set as loan
+    - Will require a minimum value of $500
+    - System will show an APY (before the user submits the form)
+      - This will be used to add interest to the loan account
+      - Recommended to create a table for “system properties” and have this value stored there and fetched when needed, this will allow you to have an admin account change the value in the future)
+    - Form will have a dropdown of the user’s accounts of which to deposit the money into
+    - Special Case for Loans:
+      - Loans will show with a positive balance of what’s required to pay off (although it is a negative since the user owes it)
+    - User will transfer funds to the loan account to pay it off
+    - Transfers will continue to be recorded in the Transactions table
+    - Loan account’s balance will be the balance minus any transfers to this account
+    - Interest will be applied to the current loan balance and add to it (causing the user to owe more)
+    - A loan with 0 balance will be considered paid off and will not accrue interest and will be eligible to be marked as closed
+    - User can’t transfer more money from a loan once it’s been opened and a loan account should not appear in the Account Source dropdowns
+  - User will see user-friendly error messages when appropriate
+  - User will see user-friendly success message when account is created successfully
+    - Redirect user to their Accounts page
+  - Listing accounts and/or viewing Account Details should show any applicable APY or “-” if none is set for the particular account (may alternatively just hide the display for these types)
+  - User will be able to close an account
+    - User must transfer or withdraw all funds out of the account before doing so
+    - Account should have a column “active” that will get set as false.
+      - All queries for Accounts should be updated to pull only “active” = true accounts (i.e., dropdowns, My Accounts, etc)
+      - Do not delete the record, this is a soft delete so it doesn’t break transactions
+    - Closed accounts don’t show up anymore
+    - If the account is a loan, it must be paid off in full first
+  - Admin role (leave this section for last)
+    - Will be able to search for users by firstname and/or lastname
+    - Will be able to look-up specific account numbers (partial match).
+    - Will be able to see the transaction history of an account
+    - Will be able to freeze an account (this is similar to disable/delete but it’s a different column)
+      - Frozen accounts still show in results, but they can’t be interacted with.
+      - [Dev note]: Will want to add a column to Accounts table called frozen and default it to false
+        - Update transactions logic to not allow frozen accounts to be used for a transaction
+    - Will be able to open accounts for specific users
+    - Will be able to deactivate a user
+      - Requires a new column on the Users table (i.e., is_active)
+      - Deactivated users will be restricted from logging in
+        - “Sorry your account is no longer active”
+
+
 ### Intructions
 #### Don't delete this
 1. Pick one project type
