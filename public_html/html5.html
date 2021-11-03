@@ -32,6 +32,8 @@ function makeSquare(x, y, length, speed) {
 
 // The ship the user controls
 var ship = makeSquare(50, canvas.height / 2 - 25, 50, 5);
+var lives = 3;
+var livesColorObj = {3: "#00FF00", 2:"#FFFF00", 1:"#FF0000", 0:"#000000"}
 
 // Flags to tracked which keys are pressed
 var up = false;
@@ -47,6 +49,7 @@ var enemyBullet = makeSquare(0, 0, 10, 10);
 
 // An array for enemies (in case there are more than one)
 var enemies = [];
+var enemyColorObj = {"basicEnemy":"#9932CC", "shooterEnemy":"#FF0000"}
 
 // Add an enemy object to the array
 var enemyBaseSpeed = 1;
@@ -93,10 +96,11 @@ function shoot() {
 }
 
 function makeEnemyType() {
-  var randomChance = Math.random();
-  if (randomChance <= 0.3) {
+  var randomChance = Math.floor(Math.random()*10)+1;
+  if (randomChance <= 4) { // 40% chance of shooter
     return "shooterEnemy";
   }
+  // 60% chance of basic
   return "basicEnemy";
 }
 
@@ -199,13 +203,17 @@ function draw() {
   erase();
   var gameOver = false;
   // Move and draw the enemies
-  enemies.forEach(function(enemy) {
+  enemies.forEach(function(enemy, i) {
     enemy.x -= enemy.s;
     if (enemy.x < 0) {
-      gameOver = true;
+      if (lives != 1) {
+        enemies.splice(i, 1);
+        lives--;
+      } else {
+        gameOver = true;
+      }
     }
-    context.fillStyle = '#00FF00';
-    if (enemy.type == "shooterEnemy") { context.fillStyle = '#FF0000'; }
+    context.fillStyle = enemyColorObj[enemy.type];
     enemy.draw();
   });
 
@@ -216,13 +224,23 @@ function draw() {
   // Collide the ship with enemies
   enemies.forEach(function(enemy, i) {
     if (isColliding(enemy, ship)) {
-      gameOver = true;
+      if (lives != 1) {
+        enemies.splice(i, 1);
+        lives--;
+      } else {
+        gameOver = true;
+      }
     }
   });
   // check for enemy bullets hitting the ship
   bullets.forEach((enemyBullet, i) => {
     if (isColliding(enemyBullet, ship)) {
-      gameOver = true;
+      if (lives != 1) {
+        bullets.splice(i, 1);
+        lives--;
+      } else {
+        gameOver = true;
+      }
     }
   });
   // Move the ship
@@ -240,7 +258,7 @@ function draw() {
     ship.y = canvas.height - ship.l;
   }
   // Draw the ship
-  context.fillStyle = '#FF0000';
+  context.fillStyle = livesColorObj[lives];
   ship.draw();
   // Move and draw the bullet
   if (shooting) {
