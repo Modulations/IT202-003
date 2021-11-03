@@ -1,0 +1,314 @@
+<canvas id="canvas" width="600" height="400" tabindex="1"></canvas>
+<style>
+#canvas {
+  width: 600px;
+  height: 400px;
+  border: 1px solid black;
+}
+</style>
+<script>
+// Arcade Shooter game
+
+// Get a reference to the canvas DOM element
+var canvas = document.getElementById('canvas');
+// Get the canvas drawing context
+var context = canvas.getContext('2d');
+
+// Create an object representing a square on the canvas
+function makeSquare(x, y, length, speed) {
+  return {
+    x: x,
+    y: y,
+    l: length,
+    s: speed,
+    draw: function() {
+      context.fillRect(this.x, this.y, this.l, this.l);
+    },
+    type: null, // TODO realize this is used sloppily
+    runAction: () => {},
+    cooldown: false
+  };
+}
+
+// The ship the user controls
+var ship = makeSquare(50, canvas.height / 2 - 25, 50, 5);
+var lives = 3;
+var livesColorObj = {3: "#00FF00", 2:"#FFFF00", 1:"#FF0000", 0:"#000000"}
+
+// Flags to tracked which keys are pressed
+var up = false;
+var down = false;
+var space = false;
+
+// Is a bullet already on the canvas?
+var shooting = false;
+// The bulled shot from the ship
+var bullets = [];
+var bullet = makeSquare(0, 0, 10, 10);
+var enemyBullet = makeSquare(0, 0, 10, 10);
+
+// An array for enemies (in case there are more than one)
+var enemies = [];
+var enemyColorObj = {"basicEnemy":"#9932CC", "shooterEnemy":"#FF0000"}
+
+// Add an enemy object to the array
+var enemyBaseSpeed = 1;
+function makeEnemy(enemyType = "basicEnemy") {
+  var enemyX = canvas.width;
+  var enemySize = Math.round((Math.random() * 15)) + 15;
+  var enemyY = Math.round(Math.random() * (canvas.height - enemySize * 2)) + enemySize;
+  var enemySpeed = Math.round(Math.random() * enemyBaseSpeed) + enemyBaseSpeed;
+  var enemy = makeSquare(enemyX, enemyY, enemySize, enemySpeed);
+  // TODO fix this
+  if (enemyType == "basicEnemy") {
+    enemy.type = "basicEnemy";
+  }
+  else if (enemyType == "shooterEnemy") {
+    enemy.type = "shooterEnemy";
+    var thisBullet = makeSquare(0, 0, 10, 12);
+    enemy.runAction = (enemy) => {
+      shootEnemyBullet(enemy, thisBullet);
+    }
+  }
+  enemies.push(enemy);
+}
+
+function shootEnemyBullet(enemy, thisBullet) {
+  if (!enemy.cooldown) {
+    var randomChance = Math.floor(Math.random()*200)+1;
+    if (randomChance == 1) { // 1/200 chance per drawframe
+      bullets.push(thisBullet);
+      thisBullet.x = enemy.x - enemy.l;
+      thisBullet.y = enemy.y - enemy.l / 2;
+      thisBullet.s *= -1;
+      enemy.cooldown = true;
+    }
+  }
+}
+
+// Shoot the bullet (if not already on screen)
+function shoot() {
+  if (!shooting) {
+    shooting = true;
+    bullet.x = ship.x + ship.l;
+    bullet.y = ship.y + ship.l / 2;
+  }
+}
+
+function makeEnemyType() {
+  var randomChance = Math.floor(Math.random()*10)+1;
+  if (randomChance <= 4) { // 40% chance of shooter
+    return "shooterEnemy";
+  }
+  // 60% chance of basic
+  return "basicEnemy";
+}
+
+// Check if number a is in the range b to c (exclusive)
+function isWithin(a, b, c) {
+  return (a > b && a < c);
+}
+
+// Return true if two squares a and b are colliding, false otherwise
+function isColliding(a, b) {
+  var result = false;
+  if (isWithin(a.x, b.x, b.x + b.l) || isWithin(a.x + a.l, b.x, b.x + b.l)) {
+    if (isWithin(a.y, b.y, b.y + b.l) || isWithin(a.y + a.l, b.y, b.y + b.l)) {
+      result = true;
+    }
+  }
+  return result;
+}
+
+// Track the user's score
+var score = 0;
+// The delay between enemies (in milliseconds)
+// TODO change enemby spawntime dynamically
+var timeBetweenEnemies = 5 * 1000;
+// ID to track the spawn timeout
+var timeoutId = null;
+
+// Show the game menu and instructions
+function menu() {
+  erase();
+  context.fillStyle = '#000000';
+  context.font = '36px Arial';
+  context.textAlign = 'center';
+  context.fillText('Shoot \'Em!', canvas.width / 2, canvas.height / 4);
+  context.font = '24px Arial';
+  context.fillText('Click to Start', canvas.width / 2, canvas.height / 2);
+  context.font = '18px Arial';
+  context.fillText('Up/Down to move, Space to shoot.', canvas.width / 2, (canvas.height / 4) * 3);
+  // Start the game on a click
+  canvas.addEventListener('click', startGame);
+}
+
+// Start the game
+function startGame() {
+	// Kick off the enemy spawn interval
+  timeoutId = setInterval(makeEnemy, timeBetweenEnemies, makeEnemyType());
+  // Make the first enemy
+  setTimeout(makeEnemy, 1000, makeEnemyType());
+  // Kick off the draw loop
+  draw();
+  // Stop listening for click events
+  canvas.removeEventListener('click', startGame);
+}
+
+// Show the end game screen
+function endGame() {
+	// Stop the spawn interval
+  clearInterval(timeoutId);
+  // Show the final score
+  erase();
+  context.fillStyle = '#000000';
+  context.font = '24px Arial';
+  context.textAlign = 'center';
+  context.fillText('Game Over. Final Score: ' + score, canvas.width / 2, canvas.height / 2);
+}
+
+// Listen for keydown events
+canvas.addEventListener('keydown', function(event) {
+  event.preventDefault();
+  if (event.keyCode === 38 || event.keyCode === 87) { // UP
+    up = true;
+  }
+  if (event.keyCode === 40 || event.keyCode === 83) { // DOWN
+    down = true;
+  }
+  if (event.keyCode === 32) { // SPACE
+    shoot();
+  }
+});
+
+// Listen for keyup events
+canvas.addEventListener('keyup', function(event) {
+  event.preventDefault();
+  if (event.keyCode === 38 || event.keyCode === 87) { // UP or W
+    up = false;
+  }
+  if (event.keyCode === 40 || event.keyCode === 83) { // DOWN or S
+    down = false;
+  }
+});
+
+// Clear the canvas
+function erase() {
+  context.fillStyle = '#FFFFFF';
+  context.fillRect(0, 0, 600, 400);
+}
+
+// The main draw loop
+function draw() {
+  erase();
+  var gameOver = false;
+  // Move and draw the enemies
+  enemies.forEach(function(enemy, i) {
+    enemy.x -= enemy.s;
+    if (enemy.x < 0) {
+      if (lives != 1) {
+        enemies.splice(i, 1);
+        lives--;
+      } else {
+        gameOver = true;
+      }
+    }
+    context.fillStyle = enemyColorObj[enemy.type];
+    enemy.draw();
+  });
+
+  // run the enemy's runaction
+  enemies.forEach((enemy) => {
+    enemy.runAction(enemy);
+  })
+  // Collide the ship with enemies
+  enemies.forEach(function(enemy, i) {
+    if (isColliding(enemy, ship)) {
+      if (lives != 1) {
+        enemies.splice(i, 1);
+        lives--;
+      } else {
+        gameOver = true;
+      }
+    }
+  });
+  // check for enemy bullets hitting the ship
+  bullets.forEach((enemyBullet, i) => {
+    if (isColliding(enemyBullet, ship)) {
+      if (lives != 1) {
+        bullets.splice(i, 1);
+        lives--;
+      } else {
+        gameOver = true;
+      }
+    }
+  });
+  // Move the ship
+  if (down) {
+    ship.y += ship.s;
+  }
+  if (up) {
+    ship.y -= ship.s;
+  }
+  // Don't go out of bounds
+  if (ship.y < 0) {
+    ship.y = 0;
+  }
+  if (ship.y > canvas.height - ship.l) {
+    ship.y = canvas.height - ship.l;
+  }
+  // Draw the ship
+  context.fillStyle = livesColorObj[lives];
+  ship.draw();
+  // Move and draw the bullet
+  if (shooting) {
+    // Move the bullet
+    bullet.x += bullet.s;
+    // Collide the bullet with enemies
+    enemies.forEach(function(enemy, i) {
+      if (isColliding(bullet, enemy)) {
+        enemies.splice(i, 1);
+        score++;
+        shooting = false;
+        // Make the game harder
+        if (score % 10 === 0 && timeBetweenEnemies > 1000) {
+          clearInterval(timeoutId);
+          timeBetweenEnemies -= 1000;
+          timeoutId = setInterval(makeEnemy, timeBetweenEnemies);
+        } else if (score % 5 === 0) {
+          enemyBaseSpeed += 1;
+        }
+      }
+    });
+    // Collide with the wall
+    if (bullet.x > canvas.width) {
+      shooting = false;
+    }
+    // Draw the bullet
+    context.fillStyle = '#0000FF';
+    bullet.draw();
+  }
+  // Move and draw enemy bullets
+  bullets.forEach((bulletRound, i) => {
+    bulletRound.x += bulletRound.s;
+    context.fillStyle = '#000FF0';
+    bulletRound.draw();
+  });
+  // Draw the score
+  context.fillStyle = '#000000';
+  context.font = '24px Arial';
+  context.textAlign = 'left';
+  context.fillText('Score: ' + score, 1, 25)
+  context.fillText('Lives: ' + lives, 1, 50)
+  // End or continue the game
+  if (gameOver) {
+    endGame();
+  } else {
+    window.requestAnimationFrame(draw);
+  }
+}
+
+// Start the game
+menu();
+canvas.focus();
+</script>
