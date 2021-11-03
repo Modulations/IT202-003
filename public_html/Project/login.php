@@ -25,7 +25,6 @@ require(__DIR__."/../../partials/nav.php");
 if (isset($_POST["email"]) && isset($_POST["password"])) {
     $email = se($_POST, "email", "", false);
     $password = se($_POST, "password", "", false);
-
     //TODO 3
     $hasError = false;
     if (empty($email)) {
@@ -81,4 +80,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
         }
     }
 }
+?>
+<?php
+require(__DIR__ . "/../../partials/flash.php");
 ?>
