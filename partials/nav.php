@@ -4,6 +4,9 @@
 //nav will pull in functions and functions will pull in db
 require(__DIR__."/../lib/functions.php");
 ?>
+<style>
+    li { display:inline; list-style-type:none; }
+</style>
 <nav>
     <ul>
         <li><a href="login.php">Login</a></li>
