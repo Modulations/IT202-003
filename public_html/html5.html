@@ -23,7 +23,10 @@ function makeSquare(x, y, length, speed) {
     s: speed,
     draw: function() {
       context.fillRect(this.x, this.y, this.l, this.l);
-    }
+    },
+    type: null, // TODO realize this is used sloppily
+    runAction: () => {},
+    cooldown: false
   };
 }
 
@@ -38,19 +41,63 @@ var space = false;
 // Is a bullet already on the canvas?
 var shooting = false;
 // The bulled shot from the ship
+var bullets = [];
 var bullet = makeSquare(0, 0, 10, 10);
+var enemyBullet = makeSquare(0, 0, 10, 10);
 
 // An array for enemies (in case there are more than one)
 var enemies = [];
 
 // Add an enemy object to the array
-var enemyBaseSpeed = 2;
-function makeEnemy() {
+var enemyBaseSpeed = 1;
+function makeEnemy(enemyType = "basicEnemy") {
   var enemyX = canvas.width;
   var enemySize = Math.round((Math.random() * 15)) + 15;
   var enemyY = Math.round(Math.random() * (canvas.height - enemySize * 2)) + enemySize;
   var enemySpeed = Math.round(Math.random() * enemyBaseSpeed) + enemyBaseSpeed;
-  enemies.push(makeSquare(enemyX, enemyY, enemySize, enemySpeed));
+  var enemy = makeSquare(enemyX, enemyY, enemySize, enemySpeed);
+  // TODO fix this
+  if (enemyType == "basicEnemy") {
+    enemy.type = "basicEnemy";
+  }
+  else if (enemyType == "shooterEnemy") {
+    enemy.type = "shooterEnemy";
+    var thisBullet = makeSquare(0, 0, 10, 12);
+    enemy.runAction = (enemy) => {
+      shootEnemyBullet(enemy, thisBullet);
+    }
+  }
+  enemies.push(enemy);
+}
+
+function shootEnemyBullet(enemy, thisBullet) {
+  if (!enemy.cooldown) {
+    var randomChance = Math.floor(Math.random()*200)+1;
+    if (randomChance == 1) { // 1/200 chance per drawframe
+      bullets.push(thisBullet);
+      thisBullet.x = enemy.x - enemy.l;
+      thisBullet.y = enemy.y - enemy.l / 2;
+      thisBullet.s *= -1;
+      enemy.cooldown = true;
+    }
+  }
+}
+
+// Shoot the bullet (if not already on screen)
+function shoot() {
+  if (!shooting) {
+    shooting = true;
+    bullet.x = ship.x + ship.l;
+    bullet.y = ship.y + ship.l / 2;
+  }
+}
+
+function makeEnemyType() {
+  var randomChance = Math.random();
+  if (randomChance <= 0.3) {
+    return "shooterEnemy";
+  }
+  return "basicEnemy";
 }
 
 // Check if number a is in the range b to c (exclusive)
@@ -72,6 +119,7 @@ function isColliding(a, b) {
 // Track the user's score
 var score = 0;
 // The delay between enemies (in milliseconds)
+// TODO change enemby spawntime dynamically
 var timeBetweenEnemies = 5 * 1000;
 // ID to track the spawn timeout
 var timeoutId = null;
@@ -94,9 +142,9 @@ function menu() {
 // Start the game
 function startGame() {
 	// Kick off the enemy spawn interval
-  timeoutId = setInterval(makeEnemy, timeBetweenEnemies);
+  timeoutId = setInterval(makeEnemy, timeBetweenEnemies, makeEnemyType());
   // Make the first enemy
-  setTimeout(makeEnemy, 1000);
+  setTimeout(makeEnemy, 1000, makeEnemyType());
   // Kick off the draw loop
   draw();
   // Stop listening for click events
@@ -118,10 +166,10 @@ function endGame() {
 // Listen for keydown events
 canvas.addEventListener('keydown', function(event) {
   event.preventDefault();
-  if (event.keyCode === 38) { // UP
+  if (event.keyCode === 38 || event.keyCode === 87) { // UP
     up = true;
   }
-  if (event.keyCode === 40) { // DOWN
+  if (event.keyCode === 40 || event.keyCode === 83) { // DOWN
     down = true;
   }
   if (event.keyCode === 32) { // SPACE
@@ -132,10 +180,10 @@ canvas.addEventListener('keydown', function(event) {
 // Listen for keyup events
 canvas.addEventListener('keyup', function(event) {
   event.preventDefault();
-  if (event.keyCode === 38) { // UP 
+  if (event.keyCode === 38 || event.keyCode === 87) { // UP or W
     up = false;
   }
-  if (event.keyCode === 40) { // DOWN
+  if (event.keyCode === 40 || event.keyCode === 83) { // DOWN or S
     down = false;
   }
 });
@@ -144,15 +192,6 @@ canvas.addEventListener('keyup', function(event) {
 function erase() {
   context.fillStyle = '#FFFFFF';
   context.fillRect(0, 0, 600, 400);
-}
-
-// Shoot the bullet (if not already on screen)
-function shoot() {
-  if (!shooting) {
-    shooting = true;
-    bullet.x = ship.x + ship.l;
-    bullet.y = ship.y + ship.l / 2;
-  }
 }
 
 // The main draw loop
@@ -166,11 +205,23 @@ function draw() {
       gameOver = true;
     }
     context.fillStyle = '#00FF00';
+    if (enemy.type == "shooterEnemy") { context.fillStyle = '#FF0000'; }
     enemy.draw();
   });
+
+  // run the enemy's runaction
+  enemies.forEach((enemy) => {
+    enemy.runAction(enemy);
+  })
   // Collide the ship with enemies
   enemies.forEach(function(enemy, i) {
     if (isColliding(enemy, ship)) {
+      gameOver = true;
+    }
+  });
+  // check for enemy bullets hitting the ship
+  bullets.forEach((enemyBullet, i) => {
+    if (isColliding(enemyBullet, ship)) {
       gameOver = true;
     }
   });
@@ -219,6 +270,12 @@ function draw() {
     context.fillStyle = '#0000FF';
     bullet.draw();
   }
+  // Move and draw enemy bullets
+  bullets.forEach((bulletRound, i) => {
+    bulletRound.x += bulletRound.s;
+    context.fillStyle = '#000FF0';
+    bulletRound.draw();
+  });
   // Draw the score
   context.fillStyle = '#000000';
   context.font = '24px Arial';
