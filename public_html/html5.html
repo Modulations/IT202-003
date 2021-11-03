@@ -299,6 +299,7 @@ function draw() {
   context.font = '24px Arial';
   context.textAlign = 'left';
   context.fillText('Score: ' + score, 1, 25)
+  context.fillText('Lives: ' + lives, 1, 50)
   // End or continue the game
   if (gameOver) {
     endGame();
