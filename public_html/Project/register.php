@@ -80,7 +80,7 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm
         $db = getDB();
         $stmt = $db->prepare("INSERT INTO Users (email, password, username) VALUES(:email, :password, :username)");
         try {
-            $stmt->execute([":email" => $email, ":password" => $hash]);
+            $stmt->execute([":email" => $email, ":password" => $hash, ":username" => $username]);
             flash("You've registered, yay...");
         } catch (Exception $e) {
             flash("There was a problem registering");
