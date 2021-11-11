@@ -35,54 +35,80 @@ Luke DaSilva
 https://docs.google.com/document/d/1e5xIGBrQflycZfNOabpNzGQ0rYx7pJv2nA6-BG-YSnA/view
 
 - Milestone 1:
-  - User will be able to register a new account
-    - Form Fields
-      - Username, email, password, confirm password (other fields optional)
-      - Email is required and must be validated
-      - Username is required
-      - Confirm password’s match
-    - Users Table
-      - Id, username, email, password (60 characters), created, modified
-    - Password must be hashed (plain text passwords will lose points)
-    - Email should be unique
-    - Username should be unique
-    - System should let user know if username or email is taken and allow the user to correct the error without wiping/clearing the form
-      - The only fields that may be cleared are the password fields
-  - User will be able to login to their account (given they enter the correct credentials)
-    - Form
-      - User can login with email or username
-        - This can be done as a single field or as two separate fields
-      - Password is required
-    - User should see friendly error messages when an account either doesn’t exist or if passwords don’t match
-    - Logging in should fetch the user’s details (and roles) and save them into the session.
-    - User will be directed to a landing page upon login
-      - This is a protected page (non-logged in users shouldn’t have access)
-      - This can be home, profile, a dashboard, etc
-  - User will be able to logout
-    - Logging out will redirect to login page
-    - User should see a message that they’ve successfully logged out
-    - Session should be destroyed (so the back button doesn’t allow them access back in)
-  - Basic security rules implemented
-    - Authentication:
-      - Function to check if user is logged in
-      - Function should be called on appropriate pages that only allow logged in users
-    - Roles/Authorization:
-      - Have a roles table (see below)
-    - Basic Roles implemented
-      - Have a Roles table (id, name, description, is_active, modified, created)
-      - Have a User Roles table (id, user_id, role_id, is_active, created, modified)
-      - Include a function to check if a user has a specific role (we won’t use it for this milestone but it should be usable in the future)
-    - Site should have basic styles/theme applied; everything should be styled
-      - I.e., forms/input, navigation bar, etc
-    - Any output messages/errors should be “user friendly”
-      - Any technical errors or debug output displayed will result in a loss of points
-    - User will be able to see their profile
-      - Email, username, etc
-    - User will be able to edit their profile
-      - Changing username/email should properly check to see if it’s available before allowing  - the change
-      - Any other fields should be properly validated
-      - Allow password reset (only if the existing correct password is provided)
-        - Hint: logic for the password check would be similar to login
+  - [x] \(11/02/2021 of completion) User will be able to register a new account
+    -  List of Evidence of Feature Completion
+      - Status: Completed
+      - Direct Link: https://lad5-prod.herokuapp.com/Project/register.php
+      - Pull Requests
+        - PR link #1 https://github.com/Modulations/IT202-003/pull/16
+      - Screenshots
+        - Screenshot #1 ![](https://user-images.githubusercontent.com/19559183/141238263-a80adbda-09d3-4b85-be6d-24aa163e2001.png)
+          - User can register
+  - [x] \(10/11/2021 of completion) User will be able to login to their account
+    -  List of Evidence of Feature Completion
+      - Status: Completed
+      - Direct Link: https://lad5-prod.herokuapp.com/Project/login.php
+      - Pull Requests
+        - PR link #1 https://github.com/Modulations/IT202-003/pull/9
+      - Screenshots
+        - Screenshot #1 ![](https://user-images.githubusercontent.com/19559183/141238178-1b043473-554e-41d2-845f-1849cf23f7d9.png)
+          - User can login
+  - [x] \(11/02/2021 of completion) User will be able to log out
+    -  List of Evidence of Feature Completion
+      - Status: Completed
+      - Direct Link: https://lad5-prod.herokuapp.com/Project/logout.php
+      - Pull Requests
+        - PR link #1 https://github.com/Modulations/IT202-003/pull/16
+      - Screenshots
+        - Screenshot #1 ![](https://user-images.githubusercontent.com/19559183/141239160-b963d269-4131-4139-ac4d-9faa7cfb10c0.png)
+          - User can log out
+  - [x] \(11/10/2021 of completion) Basic security rules implemented
+    -  List of Evidence of Feature Completion
+      - Status: Completed
+      - Direct Link: https://lad5-prod.herokuapp.com/Project/home.php
+      - Pull Requests
+        - Commit link #1 https://github.com/Modulations/IT202-003/commit/e1e2df97fe8c721815a53d4cdabb0b2a11221871
+      - Screenshots
+        - Screenshot #1 ![](https://user-images.githubusercontent.com/19559183/141239067-67d1477e-2bfb-48fd-b070-d53ea6f2d1eb.png)
+          - User can be authenticated
+  - [x] \(11/10/2021 of completion) Basic Roles implemented
+    -  List of Evidence of Feature Completion
+      - Status: Completed
+      - Direct Link: https://lad5-prod.herokuapp.com/Project/admin/create_role.php
+      - Pull Requests
+        - Commit link #1 https://github.com/Modulations/IT202-003/commit/e1e2df97fe8c721815a53d4cdabb0b2a11221871
+      - Screenshots
+        - Screenshot #1 ![](https://user-images.githubusercontent.com/19559183/141239368-974ed1f9-87da-4e16-9dc0-123deb594cd9.png)
+          - User can view, create, and assign roles
+  - [x] \(11/10/2021 of completion) Site should have basic styles/theme applied
+    -  List of Evidence of Feature Completion
+      - Status: Completed
+      - Direct Link: https://lad5-prod.herokuapp.com/Project/login.php
+      - Pull Requests
+        - Commit link #1 https://github.com/Modulations/IT202-003/commit/1f322c810f3e03d96fc9bcf362b5e0f85f303a29
+        - Commit link #2 https://github.com/Modulations/IT202-003/commit/6c1902470686b7e8ff571a290d878322d637d384
+        - Commit link #3 https://github.com/Modulations/IT202-003/commit/7013d9a4f6467b6fab2ec4d89601608c3d16b59e
+      - Screenshots
+        - Screenshot #1 ![](https://user-images.githubusercontent.com/19559183/141239540-fae13f35-44cf-449c-8998-3ad2a3f10893.png)
+          - pretty login page, other pages have fonts and navbar
+  - [x] \(10/11/2021 of completion) Clean, pretty errors
+    -  List of Evidence of Feature Completion
+      - Status: Completed
+      - Direct Link: https://lad5-prod.herokuapp.com/Project/login.php
+      - Pull Requests
+        - PR link #1 https://github.com/Modulations/IT202-003/pull/11
+      - Screenshots
+        - Screenshot #1 ![](https://user-images.githubusercontent.com/19559183/141239740-85b65c91-013c-41fe-b592-157107726b3c.png)
+          - Error for invalid email
+  - [x] \(11/02/2021 of completion) User will be able to see and edit their profile
+    -  List of Evidence of Feature Completion
+      - Status: Completed
+      - Direct Link: https://lad5-prod.herokuapp.com/Project/profile.php
+      - Pull Requests
+        - PR link #1 https://github.com/Modulations/IT202-003/pull/16
+      - Screenshots
+        - Screenshot #1 ![](https://user-images.githubusercontent.com/19559183/141239910-cd15be82-7b59-4f0b-b7cd-ae8e3593a264.png)
+          - User can see and edit profile details
 
 - Milestone 2
   - Create the Accounts table (id, account_number [unique, always 12 characters], user_id, balance (default 0), account_type, created, modified)
