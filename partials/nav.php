@@ -29,27 +29,38 @@ require(__DIR__."/../lib/functions.php");
 <link rel="stylesheet" href="<?php echo get_url('styles.css'); ?>">
 <script src="<?php echo get_url('helpers.js'); ?>"></script>
 
-<style>
+<!-- <style>
     li { display:inline; list-style-type:none; }
-</style>
+</style> -->
 
-<nav>
-    <ul>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+    <a class="navbar-brand" href="#">Shitass Bank</a>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <ul class = "navbar-nav">
         <?php if (is_logged_in()) {?>
-            <li><a href="<?php echo get_url('home.php'); ?>">Home</a></li>
-            <li><a href="<?php echo get_url('profile.php'); ?>" id="profileElement">Profile</a></li>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="<?php echo get_url('home.php'); ?>">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo get_url('profile.php'); ?>">Profile</a></li>
         <?php } ?>
         <?php if (!is_logged_in()) {?>
-            <li><a href="<?php echo get_url('login.php'); ?>">Login</a></li>
-            <li><a href="<?php echo get_url('register.php'); ?>">Register</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo get_url('login.php'); ?>">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo get_url('register.php'); ?>">Register</a></li>
         <?php } ?>
         <?php if (has_role("Admin")) {?>
-            <li><a href="<?php echo get_url('admin/create_role.php'); ?>">Create Role</a></li>
-            <li><a href="<?php echo get_url('admin/list_roles.php'); ?>">List Roles</a></li>
-            <li><a href="<?php echo get_url('admin/assign_roles.php'); ?>">Assign Roles</a></li>
+            <li class = "nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="<?php echo get_url('admin/create_role.php'); ?>">Create Role</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="<?php echo get_url('admin/list_roles.php'); ?>">List Roles</a></li>
+                <li><a class="dropdown-item" href="<?php echo get_url('admin/assign_roles.php'); ?>">Assign Roles</a></li>
+            </ul>
+            </li>
         <?php } ?>
         <?php if (is_logged_in()) {?>
-            <li><a href="<?php echo get_url('logout.php'); ?>">Logout</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo get_url('logout.php'); ?>">Logout</a></li>
         <?php } ?>
     </ul>
+    </div>
+    </div>
 </nav>
