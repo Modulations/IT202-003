@@ -12,8 +12,8 @@ if (($localWorks && $domain == "localhost") || $domain != "localhost") {
     session_set_cookie_params([
         "lifetime" => 60 * 60,
         "path" => "/Project",
-        //"domain" => $_SERVER["HTTP_HOST"] || "localhost",
-        "domain" => $domain,
+        "domain" => $_SERVER["HTTP_HOST"] || "localhost",
+        //"domain" => $domain,
         "secure" => true,
         "httponly" => true,
         "samesite" => "lax"
@@ -24,6 +24,8 @@ require(__DIR__."/../lib/functions.php");
 ?>
 
 <!-- include css and js files -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="<?php echo get_url('styles.css'); ?>">
 <script src="<?php echo get_url('helpers.js'); ?>"></script>
 
@@ -34,12 +36,12 @@ require(__DIR__."/../lib/functions.php");
 <nav>
     <ul>
         <?php if (is_logged_in()) {?>
-            <li><a href="home.php">Home</a></li>
-            <li><a href="profile.php" id="profileElement">Profile</a></li>
+            <li><a href="<?php echo get_url('home.php'); ?>">Home</a></li>
+            <li><a href="<?php echo get_url('profile.php'); ?>" id="profileElement">Profile</a></li>
         <?php } ?>
         <?php if (!is_logged_in()) {?>
-            <li><a href="login.php">Login</a></li>
-            <li><a href="register.php">Register</a></li>
+            <li><a href="<?php echo get_url('login.php'); ?>">Login</a></li>
+            <li><a href="<?php echo get_url('register.php'); ?>">Register</a></li>
         <?php } ?>
         <?php if (has_role("Admin")) {?>
             <li><a href="<?php echo get_url('admin/create_role.php'); ?>">Create Role</a></li>
@@ -47,7 +49,7 @@ require(__DIR__."/../lib/functions.php");
             <li><a href="<?php echo get_url('admin/assign_roles.php'); ?>">Assign Roles</a></li>
         <?php } ?>
         <?php if (is_logged_in()) {?>
-            <li><a href="logout.php">Logout</a></li>
+            <li><a href="<?php echo get_url('logout.php'); ?>">Logout</a></li>
         <?php } ?>
     </ul>
 </nav>
