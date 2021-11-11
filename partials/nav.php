@@ -35,7 +35,7 @@ require(__DIR__."/../lib/functions.php");
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex" style="margin: 10px;">
     <div class="container-fluid">
-    <a class="navbar-brand" href="#">Shitass Bank</a>
+    <a class="navbar-brand" href="#">Kromer Bank</a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <ul class = "navbar-nav">
         <?php if (is_logged_in()) {?>
