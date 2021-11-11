@@ -1,17 +1,26 @@
-<?php
-require(__DIR__."/../../partials/nav.php");
-?>
-<form onsubmit="return validate(this)" method="POST">
-    <div>
-        <label for="email">Username/Email</label>
-        <input type="text" name="email" required />
+<div class="cont">
+
+    <?php
+    require(__DIR__."/../../partials/nav.php");
+    ?>
+
+    <div class="bg-image customBgScreen">
+        <div class="container-fluid centered" id="loginContainer">
+            <form onsubmit="return validate(this)" style="margin: 15px" method="POST">
+                <div class="mb-3">
+                    <label class="form-label" for="email">Email / Username</label>
+                    <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Email or username" name="email" required />
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="pw">Password</label>
+                    <input type="password" class="form-control" placeholder="Password" id="pw" name="password" required minlength="8" />
+                </div>
+                <input type="submit" class="mt-3 btn btn-primary" value="Login" />
+            </form>
+        </div>
     </div>
-    <div>
-        <label for="pw">Password</label>
-        <input type="password" id="pw" name="password" required minlength="8" />
-    </div>
-    <input type="submit" value="Login" />
-</form>
+</div>
 <script>
     function validate(form) {
         //TODO 1: implement JavaScript validation

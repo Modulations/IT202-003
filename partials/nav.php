@@ -33,7 +33,7 @@ require(__DIR__."/../lib/functions.php");
     li { display:inline; list-style-type:none; }
 </style> -->
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light d-flex" style="margin: 10px;">
     <div class="container-fluid">
     <a class="navbar-brand" href="#">Shitass Bank</a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
