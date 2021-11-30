@@ -113,20 +113,16 @@ https://docs.google.com/document/d/1e5xIGBrQflycZfNOabpNzGQ0rYx7pJv2nA6-BG-YSnA/
 - Milestone 2
   - [x] (11/29/2021) Create the Accounts table
   -  List of Evidence of Feature Completion
-      - Status: Unimplemented
-      - Direct Link: (Link)
+      - Status: Complete
+      - Direct Link: https://lad5-prod.herokuapp.com/Project/login.php
       - Pull Requests
-        - PR Link #? (Link)
+        - Commit Link: ()
       - Screenshots
         - Screenshot #1 ![]()
           - Explain
-  - [x] Project setup steps:
-    - Create these as initial setup scripts in the sql folder
-      - Create a system user if they don’t exist (this will never be logged into, it’s just to keep things working per system requirements)
-      - Create a world account in the Accounts table created below (if it doesn’t exist)
-        - Account_number must be "000000000000"
-        - User_id must be the id of the system user
-        - Account type must be "world"
+  - [x] (11/29/2021) Project setup steps
+      - Status: Complete
+          - Accounts table and world account created
   - Create the Transactions table (see reference below)
   - Dashboard page
     - Will have links for Create Account, My Accounts, Deposit, Withdraw Transfer, Profile
