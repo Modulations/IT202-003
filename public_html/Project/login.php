@@ -88,6 +88,9 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
                         } else {
                             $_SESSION["user"]["roles"] = []; //no roles
                         }
+                        // get or set the user's account
+                        // each user has an account, this should work retroactively with old users assigned accounts and new users given accounts
+                        get_or_create_account();
                         die(header("Location: home.php"));
                     } else {
                         flash("Invalid password", "danger");

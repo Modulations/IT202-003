@@ -111,14 +111,22 @@ https://docs.google.com/document/d/1e5xIGBrQflycZfNOabpNzGQ0rYx7pJv2nA6-BG-YSnA/
           - User can see and edit profile details
 
 - Milestone 2
-  - Create the Accounts table (id, account_number [unique, always 12 characters], user_id, balance (default 0), account_type, created, modified)
-  - Project setup steps:
+  - [x] (11/29/2021) Create the Accounts table
+  -  List of Evidence of Feature Completion
+      - Status: Unimplemented
+      - Direct Link: (Link)
+      - Pull Requests
+        - PR Link #? (Link)
+      - Screenshots
+        - Screenshot #1 ![]()
+          - Explain
+  - [x] Project setup steps:
     - Create these as initial setup scripts in the sql folder
       - Create a system user if they don’t exist (this will never be logged into, it’s just to keep things working per system requirements)
       - Create a world account in the Accounts table created below (if it doesn’t exist)
-        - Account_number must be “000000000000”
+        - Account_number must be "000000000000"
         - User_id must be the id of the system user
-        - Account type must be “world”
+        - Account type must be "world"
   - Create the Transactions table (see reference below)
   - Dashboard page
     - Will have links for Create Account, My Accounts, Deposit, Withdraw Transfer, Profile
