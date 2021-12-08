@@ -159,14 +159,14 @@ function get_or_create_account()
                 //it shouldn't be too likely to occur with a length of 12, but it's still worth handling such a scenario
 
                 //you only need to prepare once
-                $query = "INSERT INTO Accounts (account, user_id) VALUES (:an, :uid)";
+                $query = "INSERT INTO Accounts (account, user_id, account_type) VALUES (:an, :uid, :accttype)";
                 $stmt = $db->prepare($query);
                 $user_id = get_user_id(); //caching a reference
                 $account_number = "";
                 while (!$created) {
                     try {
                         $account_number = get_random_str(12);
-                        $stmt->execute([":an" => $account_number, ":uid" => $user_id]);
+                        $stmt->execute([":an" => $account_number, ":uid" => $user_id, ":accttype" => "checking"]);
                         $created = true; //if we got here it was a success, let's exit
                         flash("Welcome! Your account has been created successfully", "success");
                     } catch (PDOException $e) {
@@ -185,6 +185,7 @@ function get_or_create_account()
                 for ($i = 0; $i < count($result); $i++) {
                     $account[$i]["id"] = $db->lastInsertId();
                     $account[$i]["account_number"] = $account_number;
+                    $account[$i]["account_type"] = "checking";
                 }
             } else {
                 for ($i = 0; $i < count($result); $i++) {
@@ -192,8 +193,9 @@ function get_or_create_account()
                     $account[$i]["id"] = $result[$i]["id"];
                     $account[$i]["account_number"] = $result[$i]["account"];
                     $account[$i]["balance"] = $result[$i]["balance"];
+                    $account[$i]["account_type"] = $result[$i]["account_type"];
                 }
-                $_SESSION["res"] = $result;
+                //$_SESSION["res"] = $result;
                 //$account = $result; //just copy it over
             }
         } catch (PDOException $e) {

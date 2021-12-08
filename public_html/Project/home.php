@@ -16,19 +16,19 @@ require(__DIR__ . "/../../partials/flash.php");
         }
         ?>
         <div class="widget" style="margin-top:30px">
-            test!
+            To see your accounts, please click <a href="<?php echo get_url('list_accounts.php'); ?>">here</a>!
         </div>
     </div>
     <?php if (is_logged_in()) { ?>
-    <div id="accountWidget" class="contentWidget"></div>
+    <div id="accountWidget" class="contentWidget">You have no accounts!</div>
     <?php } ?>
 </div>
 <script>
     var htmlElements = "";
     var acctArray = <?php echo json_encode($_SESSION["user"]["account"]) ?>;
     console.log(acctArray)
-    for (var i = 0; i < Object.keys(acctArray).length; i++) {
-        htmlElements += '<div class="widget"><h2>Account #' + acctArray[i]["account_number"] + "</h2>" + acctArray[i]["balance"] + "</div>";
+    for (var i = 0; i < Object.values(acctArray).length; i++) {
+        htmlElements += '<div class="widget"><p style="line-height: 1"><h2>Checking Account</h2>\n<small>#' + acctArray[i]["account_number"] + "</small></p>\n$" + acctArray[i]["balance"] + "</div>";
     }
     var container = document.getElementById("accountWidget");
     container.innerHTML = htmlElements;

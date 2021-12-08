@@ -131,7 +131,6 @@ https://docs.google.com/document/d/1e5xIGBrQflycZfNOabpNzGQ0rYx7pJv2nA6-BG-YSnA/
     - System will generate a unique 12 digit account number
       - Options (strike out the option you won’t do):
         - Option 1: Generate a random 12 digit/character value; must regenerate if a duplicate - collision occurs
-        - ~~Option 2: Generate the number based on the id column; requires inserting a null first to - get the last insert id, then update the record immediately after~~
     - System will associate the account to the user
     - Account type will be set as checking
     - Will require a minimum deposit of $5 (from the world account)

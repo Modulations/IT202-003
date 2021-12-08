@@ -32,20 +32,21 @@ require(__DIR__."/../lib/functions.php");
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex" style="margin: 10px;">
     <div class="container-fluid">
-    <a class="navbar-brand" href="#">Kromer Bank</a>
+    <a class="navbar-brand" href="<?php echo get_url('home.php'); ?>">Kromer Bank</a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <ul class = "navbar-nav">
         <?php if (is_logged_in()) {?>
             <li class="nav-item"><a class="nav-link active" aria-current="page" href="<?php echo get_url('home.php'); ?>">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?php echo get_url('profile.php'); ?>">Profile</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Deposit</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Withdraw</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo get_url('profile.php'); ?>">Profile</a></li>  
             <li class = "nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="<?php echo get_url('admin/create_role.php'); ?>">Create Account</a></li>
+                <li><a class="dropdown-item" href="<?php echo get_url('list_accounts.php'); ?>">My Accounts</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="<?php echo get_url('admin/list_roles.php'); ?>">Transfer</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Create Account</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Deposit</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Withdraw</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Transfer</a></li>
             </ul>
             </li>
         <?php } ?>
