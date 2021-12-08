@@ -146,7 +146,7 @@ function get_or_create_account()
         //id is for internal references, account_number is user facing info, and balance will be a cached value of activity
         $account = ["id" => -1, "account_number" => false, "balance" => 0];
         //this should always be 0 or 1, but being safe
-        $query = "SELECT id, account, balance from BGD_Accounts where user_id = :uid LIMIT 1";
+        $query = "SELECT * from Accounts where user_id = :uid";
         $db = getDB();
         $stmt = $db->prepare($query);
         try {
@@ -159,7 +159,7 @@ function get_or_create_account()
                 //it shouldn't be too likely to occur with a length of 12, but it's still worth handling such a scenario
 
                 //you only need to prepare once
-                $query = "INSERT INTO BGD_Accounts (account, user_id) VALUES (:an, :uid)";
+                $query = "INSERT INTO Accounts (account, user_id) VALUES (:an, :uid)";
                 $stmt = $db->prepare($query);
                 $user_id = get_user_id(); //caching a reference
                 $account_number = "";
@@ -182,13 +182,18 @@ function get_or_create_account()
                     }
                 }
                 //loop exited, let's assign the new values
-                $account["id"] = $db->lastInsertId();
-                $account["account_number"] = $account_number;
+                for ($i = 0; $i < count($result); $i++) {
+                    $account[$i]["id"] = $db->lastInsertId();
+                    $account[$i]["account_number"] = $account_number;
+                }
             } else {
+                for ($i = 0; $i < count($result); $i++) {
+                    $account[$i]["id"] = $result["id"];
+                    $account[$i]["account_number"] = $result["account"];
+                    $account[$i]["balance"] = $result["balance"];
+                }
+                $_SESSION["res"] = $result;
                 //$account = $result; //just copy it over
-                $account["id"] = $result["id"];
-                $account["account_number"] = $result["account"];
-                $account["balance"] = $result["balance"];
             }
         } catch (PDOException $e) {
             flash("Technical error: " . var_export($e->errorInfo, true), "danger");

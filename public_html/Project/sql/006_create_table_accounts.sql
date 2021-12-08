@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS BGD_Accounts(
+CREATE TABLE IF NOT EXISTS Accounts(
     id int AUTO_INCREMENT PRIMARY KEY,
     account varchar(12) unique,
     user_id int,

@@ -38,6 +38,16 @@ require(__DIR__."/../lib/functions.php");
         <?php if (is_logged_in()) {?>
             <li class="nav-item"><a class="nav-link active" aria-current="page" href="<?php echo get_url('home.php'); ?>">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="<?php echo get_url('profile.php'); ?>">Profile</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Deposit</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Withdraw</a></li>
+            <li class = "nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="<?php echo get_url('admin/create_role.php'); ?>">Create Account</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="<?php echo get_url('admin/list_roles.php'); ?>">Transfer</a></li>
+            </ul>
+            </li>
         <?php } ?>
         <?php if (!is_logged_in()) {?>
             <li class="nav-item"><a class="nav-link" href="<?php echo get_url('login.php'); ?>">Login</a></li>
