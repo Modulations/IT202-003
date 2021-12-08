@@ -10,17 +10,17 @@ require(__DIR__ . "/../../partials/flash.php");
         <?php if (is_logged_in()) {
             echo "Welcome home, " . get_username();
             //comment this out if you don't want to see the session variables
-            echo "<pre>" . var_export($_SESSION, true) . "</pre>";
+            //echo "<pre>" . var_export($_SESSION, true) . "</pre>";
         } else {
             echo "You're not logged in";
         }
         ?>
-        <div class="contentWidget" style="margin-top:30px">
+        <div class="widget" style="margin-top:30px">
             test!
         </div>
     </div>
     <?php if (is_logged_in()) { ?>
-    <div id="accountWidget" class="contentWidget"><?php echo $_SESSION["user"]["account"]["account_number"] ?></div>
+    <div id="accountWidget" class="contentWidget"></div>
     <?php } ?>
 </div>
 <script>
@@ -28,7 +28,7 @@ require(__DIR__ . "/../../partials/flash.php");
     var acctArray = <?php echo json_encode($_SESSION["user"]["account"]) ?>;
     console.log(acctArray)
     for (var i = 0; i < Object.keys(acctArray).length; i++) {
-        htmlElements += '<h2>Account #' + i["account_number"] + "</h2><div>" + i["balance"] + "</div>";
+        htmlElements += '<div class="widget"><h2>Account #' + acctArray[i]["account_number"] + "</h2>" + acctArray[i]["balance"] + "</div>";
     }
     var container = document.getElementById("accountWidget");
     container.innerHTML = htmlElements;

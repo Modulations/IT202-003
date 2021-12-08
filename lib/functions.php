@@ -144,14 +144,14 @@ function get_or_create_account()
     if (is_logged_in()) {
         //let's define our data structure first
         //id is for internal references, account_number is user facing info, and balance will be a cached value of activity
-        $account = ["id" => -1, "account_number" => false, "balance" => 0];
+        $account = [["id" => -1, "account_number" => false, "balance" => 0]];
         //this should always be 0 or 1, but being safe
         $query = "SELECT * from Accounts where user_id = :uid";
         $db = getDB();
         $stmt = $db->prepare($query);
         try {
             $stmt->execute([":uid" => get_user_id()]);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchall(PDO::FETCH_ASSOC);
             if (!$result) {
                 //account doesn't exist, create it
                 $created = false;
@@ -188,9 +188,10 @@ function get_or_create_account()
                 }
             } else {
                 for ($i = 0; $i < count($result); $i++) {
-                    $account[$i]["id"] = $result["id"];
-                    $account[$i]["account_number"] = $result["account"];
-                    $account[$i]["balance"] = $result["balance"];
+                    echo $i;
+                    $account[$i]["id"] = $result[$i]["id"];
+                    $account[$i]["account_number"] = $result[$i]["account"];
+                    $account[$i]["balance"] = $result[$i]["balance"];
                 }
                 $_SESSION["res"] = $result;
                 //$account = $result; //just copy it over
