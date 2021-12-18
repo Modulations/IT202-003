@@ -189,7 +189,6 @@ function get_or_create_account()
                 }
             } else {
                 for ($i = 0; $i < count($result); $i++) {
-                    echo $i;
                     $account[$i]["id"] = $result[$i]["id"];
                     $account[$i]["account_number"] = $result[$i]["account"];
                     $account[$i]["balance"] = $result[$i]["balance"];
@@ -221,4 +220,40 @@ function get_user_account_id()
         return (int)se($_SESSION["user"]["account"], "id", 0, false);
     }
     return 0;
+}
+function make_account($init_bal, $account_type = "checking") {
+    $account = [["id" => -1, "account_number" => false, "balance" => 0]];
+    $db = getDB();
+    $created = false;
+    $stmt = $db->prepare("INSERT INTO Accounts (account, user_id, account_type, balance) VALUES (:an, :uid, :accttype, :bal)");
+    $user_id = get_user_id(); //caching a reference
+    $account_number = "";
+    while (!$created) {
+        try {
+            $account_number = get_random_str(12);
+            $stmt->execute([":an" => $account_number, ":uid" => $user_id, ":accttype" => $account_type, ":bal" => $init_bal]);
+            $created = true; //if we got here it was a success, let's exit
+        } catch (PDOException $e) {
+            $code = se($e->errorInfo, 0, "00000", false);
+            //if it's a duplicate error, just let the loop happen
+            //otherwise throw the error since it's likely something looping won't resolve
+            //and we don't want to get stuck here forever
+            if (
+                $code !== "23000"
+            ) {
+                throw $e;
+            }
+        }
+        $stmt = $db->prepare("SELECT * from Accounts where user_id = :uid");
+        $stmt->execute([":uid" => get_user_id()]);
+        $result = $stmt->fetchall(PDO::FETCH_ASSOC);
+        for ($i = 0; $i < count($result); $i++) {
+            $account[$i]["id"] = $result[$i]["id"];
+            $account[$i]["account_number"] = $result[$i]["account"];
+            $account[$i]["balance"] = $result[$i]["balance"];
+            $account[$i]["account_type"] = $result[$i]["account_type"];
+        }
+        $_SESSION["user"]["account"] = $account;
+        $_SESSION["user"]["newestAcct"] = $account_number;
+    }
 }
