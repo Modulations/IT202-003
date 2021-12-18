@@ -7,6 +7,7 @@ require(__DIR__ . "/../../partials/flash.php");
 <!-- TODO complete this -->
 
 <div class="container-fluid" id="contentWidget">
+<h1>Deposit</h1>
 <form onsubmit="return validate(this)" style="margin: 15px" method="POST">
     <div class="mb-3">
         <label class="form-label" for="acct_src">Source Account ID</label>

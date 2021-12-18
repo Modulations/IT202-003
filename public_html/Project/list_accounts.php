@@ -6,6 +6,7 @@ require(__DIR__ . "/../../partials/nav.php");
 require(__DIR__ . "/../../partials/flash.php");
 ?>
 
+<h1 class="centered">My Accounts</h1>
 <?php if (is_logged_in()) { ?>
     <div id="accountWidget" class="centered" style="border: 3px solid darkgrey">You have no accounts!</div>
 <?php } ?>
