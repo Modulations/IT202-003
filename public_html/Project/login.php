@@ -1,9 +1,7 @@
+<?php
+require(__DIR__."/../../partials/nav.php");
+?>
 <div class="cont">
-
-    <?php
-    require(__DIR__."/../../partials/nav.php");
-    ?>
-
     <div class="bg-image customBgScreen">
         <div class="container-fluid centered" id="loginContainer">
             <form onsubmit="return validate(this)" style="margin: 15px" method="POST">

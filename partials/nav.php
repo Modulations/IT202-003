@@ -43,10 +43,10 @@ require(__DIR__."/../lib/functions.php");
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="<?php echo get_url('list_accounts.php'); ?>">My Accounts</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li class="nav-item"><a class="nav-link" href="#">Create Account</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Deposit</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Withdraw</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Transfer</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?php echo get_url('create_account.php')?>">Create Account</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?php echo get_url('deposit.php')?>">Deposit</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?php echo get_url('withdraw.php')?>">Withdraw</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?php echo get_url('transfer.php')?>">Transfer</a></li>
             </ul>
             </li>
         <?php } ?>

@@ -1,12 +1,12 @@
-CREATE TABLE IF NOT EXISTS Accounts(
+CREATE TABLE IF NOT EXISTS Transactions(
     id int AUTO_INCREMENT PRIMARY KEY,
-    account varchar(12) unique,
-    user_id int,
-    account_id varchar(12) unique 0,
+    account_src int,
+    account_dest int,
+    balance_change int,
+    transaction_type varchar(12),
+    memo varchar(50),
+    expected_total int,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(id),
-    FOREIGN KEY (account_id) REFERENCES Accounts(account),
-    check LENGTH(account) = 12
+    FOREIGN KEY (account_src) REFERENCES Accounts(id),
+    FOREIGN KEY (account_dest) REFERENCES Accounts(id)
 )
--- aka james bond: drop table 007
