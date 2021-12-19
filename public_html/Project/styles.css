@@ -25,3 +25,24 @@
   background: #FFFFFF;
   padding: 10px;
 }
+
+.dashContainer {
+  display: flex;
+  justify-content: space-around;
+  width: auto;
+}
+
+.widget {
+  display: flex;
+  flex-direction: column;
+}
+
+.contentWidget {
+  border-radius: 15px;
+  width: 35%;
+  height: auto;
+  padding: 0.5rem;
+  background-color: #efefef;
+  display: flex;
+  flex-direction: column;
+}

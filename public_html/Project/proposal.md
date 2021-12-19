@@ -110,15 +110,185 @@ https://docs.google.com/document/d/1e5xIGBrQflycZfNOabpNzGQ0rYx7pJv2nA6-BG-YSnA/
         - Screenshot #1 ![](https://user-images.githubusercontent.com/19559183/141239910-cd15be82-7b59-4f0b-b7cd-ae8e3593a264.png)
           - User can see and edit profile details
 
-- Milestone 2
-  - Create the Accounts table (id, account_number [unique, always 12 characters], user_id, balance (default 0), account_type, created, modified)
-  - Project setup steps:
-    - Create these as initial setup scripts in the sql folder
-      - Create a system user if they don’t exist (this will never be logged into, it’s just to keep things working per system requirements)
-      - Create a world account in the Accounts table created below (if it doesn’t exist)
-        - Account_number must be “000000000000”
-        - User_id must be the id of the system user
-        - Account type must be “world”
+
+<table>
+<tr><td>Milestone 2</td></tr><tr><td>
+<table>
+<tr><td>F1 - Transactions Table (2021-12-18)</td></tr>
+<tr><td>Status: complete</td></tr>
+<tr><td>Links:<p>
+
+ [https://lad5-prod.herokuapp.com/Project/list_accounts.php](https://lad5-prod.herokuapp.com/Project/list_accounts.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [github.com/Modulations/IT202-003/pull/28](github.com/Modulations/IT202-003/pull/28)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F1 - Transactions Table</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/146670686-80b8ca6b-7007-414d-83d4-63b20d3036d3.png">
+<p>Displays the transactions table</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<table>
+<tr><td>F2 - Dashboard Page ()</td></tr>
+<tr><td>Status: complete</td></tr>
+<tr><td>Links:<p>
+
+ [https://lad5-prod.herokuapp.com/Project/home.php](https://lad5-prod.herokuapp.com/Project/home.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [TODO](TODO)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F2 - Dashboard Page</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/146670713-2dbe4c4e-3f32-4e89-82d6-3eff8ba60c4a.png">
+<p>Displays the home page</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<table>
+<tr><td>F3 - Accounts Table (2021-12-08)</td></tr>
+<tr><td>Status: complete</td></tr>
+<tr><td>Links:<p>
+
+ [https://lad5-prod.herokuapp.com/Project/list_accounts.php](https://lad5-prod.herokuapp.com/Project/list_accounts.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [TODO](TODO)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F3 - Account Table</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/146670686-80b8ca6b-7007-414d-83d4-63b20d3036d3.png">
+<p>Displays the account table</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<table>
+<tr><td>F4 - Deposit and Withdraw from Accounts (2021-12-18)</td></tr>
+<tr><td>Status: complete</td></tr>
+<tr><td>Links:<p>
+
+ [https://lad5-prod.herokuapp.com/Project/deposit.php](https://lad5-prod.herokuapp.com/Project/deposit.php)</p><p>
+
+ [https://lad5-prod.herokuapp.com/Project/withdraw.php](https://lad5-prod.herokuapp.com/Project/withdraw.php)</p><p>
+
+ [https://lad5-prod.herokuapp.com/Project/transfer.php](https://lad5-prod.herokuapp.com/Project/transfer.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [TODO](TODO)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F4 - Deposit / Withdraw / Transfer</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/146670831-5a233747-a64c-4956-94e8-cfc943412fe8.png">
+<p>Deposit</p>
+</td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/146670849-b7372776-45cd-4ee9-ba79-26ea09a8b34e.png">
+<p>Withdraw</p>
+</td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/146670856-f275be8b-41e6-43f2-809c-09f49c302ac9.png">
+<p>Transfer</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<table>
+<tr><td>F5 - Account Listing / Details Page (2021-12-19)</td></tr>
+<tr><td>Status: complete</td></tr>
+<tr><td>Links:<p>
+
+ [https://lad5-prod.herokuapp.com/Project/list_accounts.php](https://lad5-prod.herokuapp.com/Project/list_accounts.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [TODO](TODO)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F5 - List Accounts / Details</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/146670923-5a7f7fd2-2c63-4e90-a48f-a1b977effc92.png">
+<p>Displays the Accounts listing page and their details</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<table>
+<tr><td>F6 - Checking Account Creation (2021-12-18)</td></tr>
+<tr><td>Status: complete</td></tr>
+<tr><td>Links:<p>
+
+ [https://lad5-prod.herokuapp.com/Project/create_account.php](https://lad5-prod.herokuapp.com/Project/create_account.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [TODO](TODO)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F6 - Account Creation</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/146670978-032cbd93-18e4-4cf4-a183-1e7c739744c6.png">
+<p>Displays account creation options</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr></td></tr></table>
+  - [x] (11/29/2021) Create the Accounts table
+  -  List of Evidence of Feature Completion
+      - Status: Complete
+      - Direct Link: https://lad5-prod.herokuapp.com/Project/login.php
+      - Pull Requests
+        - Commit Link: ()
+      - Screenshots
+        - Screenshot #1 ![]()
+          - Explain
+  - [x] (11/29/2021) Project setup steps
+      - Status: Complete
+          - Accounts table and world account created
   - Create the Transactions table (see reference below)
   - Dashboard page
     - Will have links for Create Account, My Accounts, Deposit, Withdraw Transfer, Profile
@@ -127,7 +297,6 @@ https://docs.google.com/document/d/1e5xIGBrQflycZfNOabpNzGQ0rYx7pJv2nA6-BG-YSnA/
     - System will generate a unique 12 digit account number
       - Options (strike out the option you won’t do):
         - Option 1: Generate a random 12 digit/character value; must regenerate if a duplicate - collision occurs
-        - ~~Option 2: Generate the number based on the id column; requires inserting a null first to - get the last insert id, then update the record immediately after~~
     - System will associate the account to the user
     - Account type will be set as checking
     - Will require a minimum deposit of $5 (from the world account)
