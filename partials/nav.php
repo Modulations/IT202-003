@@ -42,6 +42,7 @@ require(__DIR__."/../lib/functions.php");
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="<?php echo get_url('list_accounts.php'); ?>">My Accounts</a></li>
+                <li><a class="dropdown-item" href="<?php echo get_url('transaction_history.php'); ?>">Transactions</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo get_url('create_account.php')?>">Create Account</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo get_url('deposit.php')?>">Deposit</a></li>
