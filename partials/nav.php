@@ -47,7 +47,8 @@ require(__DIR__."/../lib/functions.php");
                 <li class="nav-item"><a class="nav-link" href="<?php echo get_url('create_account.php')?>">Create Account</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo get_url('deposit.php')?>">Deposit</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo get_url('withdraw.php')?>">Withdraw</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?php echo get_url('transfer.php')?>">Transfer</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?php echo get_url('transfer.php')?>">Move Money</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?php echo get_url('ext-transfer.php')?>">Send Money</a></li>
             </ul>
             </li>
         <?php } ?>
