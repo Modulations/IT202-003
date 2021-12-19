@@ -8,10 +8,12 @@ if (!is_logged_in()) {
 if (isset($_POST["save"])) {
     $email = se($_POST, "email", null, false);
     $username = se($_POST, "username", null, false);
+    $first_name = se($_POST, "first_name", null, false);
+    $last_name = se($_POST, "last_name", null, false);
 
-    $params = [":email" => $email, ":username" => $username, ":id" => get_user_id()];
+    $params = [":email" => $email, ":username" => $username, ":id" => get_user_id(), ":first_name" => $first_name, ":last_name" => $last_name];
     $db = getDB();
-    $stmt = $db->prepare("UPDATE Users set email = :email, username = :username where id = :id");
+    $stmt = $db->prepare("UPDATE Users set email = :email, username = :username, first_name = :first_name, last_name = :last_name where id = :id");
     try {
         $stmt->execute($params);
     } catch (Exception $e) {
@@ -30,10 +32,12 @@ if (isset($_POST["save"])) {
         }
     }
     //select fresh data from table
-    $stmt = $db->prepare("SELECT id, email, IFNULL(username, email) as `username` from Users where id = :id LIMIT 1");
+    $stmt = $db->prepare("SELECT id, email IFNULL(username, email) as `username` from Users where id = :id LIMIT 1");
     try {
         $stmt->execute([":id" => get_user_id()]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $_SESSION["user"]["first_name"] = $first_name;
+        $_SESSION["user"]["last_name"] = $last_name;
         if ($user) {
             //$_SESSION["user"] = $user;
             $_SESSION["user"]["email"] = $user["email"];
@@ -51,6 +55,7 @@ if (isset($_POST["save"])) {
     $current_password = se($_POST, "currentPassword", null, false);
     $new_password = se($_POST, "newPassword", null, false);
     $confirm_password = se($_POST, "confirmPassword", null, false);
+    if(!empty($current_password) && !empty($new_password) && !empty($confirm_password)) {
     if (isset($current_password) && isset($new_password) && isset($confirm_password)) {
         if ($new_password === $confirm_password) {
             //TODO validate current
@@ -79,6 +84,7 @@ if (isset($_POST["save"])) {
             flash("New passwords don't match", "warning");
         }
     }
+    }
 }
 ?>
 
@@ -89,6 +95,14 @@ $username = get_username();
 <div class="container-fluid">
     <h1>Profile</h1>
     <form method="POST" onsubmit="return validate(this);">
+        <div class="mb-3">
+            <label class="form-label" for="first_name">First Name</label>
+            <input class="form-control" type="text" name="first_name" id="first_name" value="<?php echo $_SESSION["user"]["first_name"] ?>" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="last_name">Last Name</label>
+            <input class="form-control" type="text" name="last_name" id="last_name" value="<?php echo $_SESSION["user"]["last_name"] ?>" />
+        </div>
         <div class="mb-3">
             <label class="form-label" for="email">Email</label>
             <input class="form-control" type="email" name="email" id="email" value="<?php se($email); ?>" />
