@@ -4,7 +4,6 @@ require(__DIR__ . "/../../partials/nav.php");
 <?php
 require(__DIR__ . "/../../partials/flash.php");
 ?>
-<!-- TODO complete this -->
 
 <div class="container-fluid" id="contentWidget">
 <h1>Withdraw</h1>

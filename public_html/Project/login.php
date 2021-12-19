@@ -86,6 +86,12 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
                         } else {
                             $_SESSION["user"]["roles"] = []; //no roles
                         }
+                        // first / last name
+                        $stmt = $db->prepare("SELECT first_name, last_name FROM Users WHERE id = :user_id");
+                        $stmt->execute([":user_id" => $user["id"]]);
+                        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $_SESSION["user"]["first_name"] = $res[0]["first_name"];
+                        $_SESSION["user"]["last_name"] = $res[0]["last_name"];
                         // get or set the user's account
                         // each user has an account, this should work retroactively with old users assigned accounts and new users given accounts
                         get_or_create_account();
