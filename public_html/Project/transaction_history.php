@@ -74,7 +74,7 @@ for ($x = 0; $x < count($_SESSION["user"]["account"]); $x++) {
     }
     htmlElements += 'Select start date: <input type="date" id="startDate" name="from-date" value="2020-01-28" min="1970-01-01" max="2077-12-31"><br />';
     htmlElements += 'Select end date: <input type="date" id="endDate" name="from-date" value="2022-05-12" min="1970-01-01" max="2077-12-31"><br />';
-    htmlElements += 'Select transaction type: <select name="xactiontype" id="xactiontype"><option value="deposit">Deposit</option><option value="withdraw">Withdraw</option><option value="transfer">Transfer</option></select>';
+    htmlElements += 'Select transaction type: <select name="xactiontype" id="xactiontype"><option value="deposit">Deposit</option><option value="withdraw">Withdraw</option><option value="transfer">Transfer</option><option value="ext-transfer">External Transfer</option></select>';
     for (var i = 0; i < acctArray.length; i++) {
         // Header
         htmlElements += '<div class="widget"><p style="line-height: 1"><h2>' +
