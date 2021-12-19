@@ -186,6 +186,8 @@ function get_or_create_account()
                     $account[$i]["id"] = $db->lastInsertId();
                     $account[$i]["account_number"] = $account_number;
                     $account[$i]["account_type"] = "checking";
+                    $account[$i]["balance"] = 0;
+                    $account[$i]["created"] = time();
                 }
             } else {
                 for ($i = 0; $i < count($result); $i++) {
@@ -193,6 +195,7 @@ function get_or_create_account()
                     $account[$i]["account_number"] = $result[$i]["account"];
                     $account[$i]["balance"] = $result[$i]["balance"];
                     $account[$i]["account_type"] = $result[$i]["account_type"];
+                    $account[$i]["created"] = $result[$i]["created"];
                 }
                 //$_SESSION["res"] = $result;
                 //$account = $result; //just copy it over
@@ -210,7 +213,7 @@ function get_or_create_account()
 function get_account_balance()
 {
     if (is_logged_in() && isset($_SESSION["user"]["account"])) {
-        return (int)se($_SESSION["user"]["account"], "balance", 0, false);
+        return (int)se($_SESSION["user"]["account"][0], "balance", 0, false);
     }
     return 0;
 }
@@ -252,6 +255,7 @@ function make_account($init_bal, $account_type = "checking") {
             $account[$i]["account_number"] = $result[$i]["account"];
             $account[$i]["balance"] = $result[$i]["balance"];
             $account[$i]["account_type"] = $result[$i]["account_type"];
+            $account[$i]["created"] = $result[$i]["created"];
         }
         $_SESSION["user"]["account"] = $account;
         $_SESSION["user"]["newestAcct"] = $account_number;
