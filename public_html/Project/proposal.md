@@ -278,35 +278,109 @@ https://docs.google.com/document/d/1e5xIGBrQflycZfNOabpNzGQ0rYx7pJv2nA6-BG-YSnA/
 </td>
 </tr></td></tr></table>
 
-- Milestone 3
-  - User will be able to transfer between their accounts
-    - Form should include a dropdown first AccountSrc and a dropdown for AccountDest (only accounts the user owns; no world account)
-    - Form should include a field for a positive numeric value
-    - System shouldn’t allow the user to transfer more funds than what’s available in     AccountSrc
-    - Form should allow the user to record a memo for the transaction
-    - Each transaction is recorded as a transaction pair in the Transaction table
-    - These will reflect in the transaction history page
-    - Show appropriate user-friendly error messages
-    - Show user-friendly success messages
-  - Transaction History page
-    - Will show the latest 10 transactions by default
-    - User will be able to filter transactions between two dates
-    - User will be able to filter transactions by type (deposit, withdraw, transfer)
-    - Transactions should paginate results after the initial 10
-  - User’s profile page should record/show First and Last name
-  - User will be able to transfer funds to another user’s account
-    - Form should include a dropdown of the current user’s accounts (as AccountSrc)
-    - Form should include a field for the destination user’s last name
-    - Form should include a field for the last 4 digits of the destination user’s account number (to lookup AccountDest)
-    - Form should include a field for a positive numerical value
-    - Form should allow the user to record a memo for the transaction
-    - System shouldn’t let the user transfer more than the balance of their account
-    - System will lookup appropriate account based on destination user’s last name and the last 4 digits of the account number
-    - Show appropriate user-friendly error messages
-    - Show user-friendly success messages
-    - Transaction will be recorded with the type as “ext-transfer”
-    - Each transaction is recorded as a transaction pair in the Transaction table
-      - These will reflect in the transaction history page
+
+<table>
+<tr><td>Milestone 3</td></tr><tr><td>
+<table>
+<tr><td>F1 - User will be able to transfer balance between accounts (2021-12-18)</td></tr>
+<tr><td>Status: incomplete</td></tr>
+<tr><td>Links:<p>
+
+ [lad5-prod.herokuapp.com/Project/transfer.php](lad5-prod.herokuapp.com/Project/transfer.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [TODO](TODO)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F1 - Internal Account Money Transfer</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/ff0000/000000?text=incomplete"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/146675430-a0d15e86-11d0-4924-8ef8-375fd4cd6442.png">
+<p>Somewhere between my botched transfer page and upgrading it to work within your single user, I managed to mangle the code where the destination account's balance does not change. I keep getting invalid array keys and I simply don't have the time to debug this.</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<table>
+<tr><td>F2 - Transaction History Page (2021-12-19)</td></tr>
+<tr><td>Status: complete</td></tr>
+<tr><td>Links:<p>
+
+ [lad5-prod.herokuapp.com/Project/transaction_history.php](lad5-prod.herokuapp.com/Project/transaction_history.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [TODO](TODO)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F2 - Transaction History</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/146675380-77bec94f-cc49-4622-81c5-bd5936c908ae.png">
+<p>Displays transactions and their various filtering options</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<table>
+<tr><td>F3 - User's profile page should store first & last name (2021-12-19)</td></tr>
+<tr><td>Status: complete</td></tr>
+<tr><td>Links:<p>
+
+ [lad5-prod.herokuapp.com/Project/profile.php](lad5-prod.herokuapp.com/Project/profile.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [TODO](TODO)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F3 - First and Last Name Stored in Profile</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/146675318-ea121c7e-996a-4ebb-a30f-705b8fbf61c6.png">
+<p>Displays the first and last name</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<table>
+<tr><td>F4 - User will be able to transfer funds to another user's account (2021-12-18)</td></tr>
+<tr><td>Status: complete</td></tr>
+<tr><td>Links:<p>
+
+ [lad5-prod.herokuapp.com/Project/ext-transfer.php](lad5-prod.herokuapp.com/Project/ext-transfer.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [TODO](TODO)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F4 - Fund Transfers</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/146675298-5971a054-4bcf-4ad4-9a98-7ea076b95bad.png">
+<p>Shows the page</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr></td></tr></table>
 
 - Milestone 4
   - User can set their profile to be public or private (will need another column in Users table)
