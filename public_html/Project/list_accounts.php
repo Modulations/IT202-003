@@ -1,4 +1,3 @@
-<!-- TODO this -->
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 ?>
@@ -15,7 +14,7 @@ require(__DIR__ . "/../../partials/flash.php");
 $transactionLog = [];
 $db = getDB();
 for ($x = 0; $x < count($_SESSION["user"]["account"]); $x++) {
-    $stmt = $db->prepare("SELECT * FROM Transactions WHERE account_src = " . $_SESSION["user"]["account"][$x]["id"] . " LIMIT 5"); // THIS IS FOR THE USER
+    $stmt = $db->prepare("SELECT * FROM Transactions WHERE account_src = " . $_SESSION["user"]["account"][$x]["id"] . " LIMIT 5");
     try {
         $stmt->execute();
         $res = $stmt->fetchall(PDO::FETCH_ASSOC);
@@ -32,7 +31,7 @@ for ($x = 0; $x < count($_SESSION["user"]["account"]); $x++) {
     //end
     function quickXAction(xaction) {
         return '<tr><th style="border: 1px solid black; border-collapse: collapse;">' + 
-        xaction.created + '</th><th style="border: 1px solid black; border-collapse: collapse;">' +
+        new Date(Date.parse(xaction.created)).toDateString() + '</th><th style="border: 1px solid black; border-collapse: collapse;">' +
         xaction.transaction_type + '</th><th style="border: 1px solid black; border-collapse: collapse;">' +
         'to ' + xaction.account_dest + '</th><th style="border: 1px solid black; border-collapse: collapse;">' +
         xaction.memo + '</th><th style="border: 1px solid black; border-collapse: collapse;">' +
@@ -49,7 +48,7 @@ for ($x = 0; $x < count($_SESSION["user"]["account"]); $x++) {
         }
         refinedTransactionHist[z] += "</table><br />";
     }
-    for (var i = 0; i < Object.values(acctArray).length; i++) {
+    for (var i = 0; i < acctArray.length; i++) {
         // Details
         htmlElements += '<div class="widget"><p style="line-height: 1"><h2>' +
         capitalizeFirstLetter(acctArray[i]["account_type"]) +
