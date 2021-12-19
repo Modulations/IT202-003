@@ -6,7 +6,7 @@ require(__DIR__ . "/../../partials/flash.php");
 ?>
 
 <div class="container-fluid" id="contentWidget">
-<h1>Transfer</h1>
+<h1>Internal Transfer</h1>
 <form onsubmit="return validate(this)" style="margin: 15px" method="POST">
     <div class="mb-3">
         <label class="form-label" for="acct_src">Source Account ID</label>
@@ -44,9 +44,8 @@ require(__DIR__ . "/../../partials/flash.php");
         selectElem.options[selectElem.options.length] = new Option(capitalizeFirstLetter(acctArray[index]["account_type"]) + " " + acctArray[index]["account_number"] + ": $" + acctArray[index]["balance"], acctArray[index]["id"]);
     }
     var destElem = document.getElementById("destinationAcctSelect");
-    var acctArray = <?php echo json_encode($_SESSION["user"]["account"]) ?>;
-    for(index in acctArray) {
-        destElem.options[destElem.options.length] = new Option(capitalizeFirstLetter(acctArray[index]["account_type"]) + " " + acctArray[index]["account_number"] + ": $" + acctArray[index]["balance"], acctArray[index]["id"]);
+    for(otherIndex in acctArray) {
+        destElem.options[destElem.options.length] = new Option(capitalizeFirstLetter(acctArray[otherIndex]["account_type"]) + " " + acctArray[otherIndex]["account_number"] + ": $" + acctArray[otherIndex]["balance"], acctArray[otherIndex]["id"]);
     }
 </script>
 
