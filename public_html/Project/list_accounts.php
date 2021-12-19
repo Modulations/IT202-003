@@ -11,15 +11,6 @@ require(__DIR__ . "/../../partials/flash.php");
     <div id="accountWidget" class="centered" style="border: 3px solid darkgrey">You have no accounts!</div>
 <?php } ?>
 
-<div>
-    <a class="btn btn-primary" data-bs-toggle="collapse" href="#account[n]" role="button" aria-expanded="false" aria-controls="account[n]">shit yourself</a>
-    <div class="collapse" id="account[n]">
-        <div class="card card-body">
-            shitting
-        </div>
-    </div>
-</div>
-
 <?php
 $transactionLog = [];
 $db = getDB();
