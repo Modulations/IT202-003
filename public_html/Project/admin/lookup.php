@@ -7,13 +7,25 @@ if (!has_role("Admin")) {
     die(header("Location: $BASE_PATH" . "home.php"));
 }
 $query = "SELECT id, email, username, first_name, last_name, user_private, created from Users";
-$params = null;
-if (isset($_POST["first_name"])) {
-    $search = se($_POST, "first_name", "", false);
-    $query .= " WHERE first_name LIKE :first_name";
-    $params =  [":first_name" => "%$search%"];
+$params = [];
+if (isset($_POST["first_name"]) || isset($_POST["last_name"])) {
+    if(!empty($_POST["first_name"]) || !empty($_POST["last_name"])) {
+        $query .= " WHERE ";
+    }
+    if (!empty($_POST["first_name"])) {
+        $fn = se($_POST, "first_name", "", false);
+        $query .= "first_name LIKE :first_name";
+        if(!empty($_POST["last_name"])) {$query .= " OR ";}
+        $params[":first_name"] = $fn;
+    }
+    if (!empty($_POST["last_name"])) {
+        $ln = se($_POST, "last_name", "", false);
+        $query .= "last_name LIKE :last_name";
+        $params[":last_name"] = $ln;
+    }
 }
 $query .= " ORDER BY id LIMIT 10";
+//echo $query;
 $db = getDB();
 $stmt = $db->prepare($query);
 $roles = [];
@@ -35,6 +47,7 @@ try {
     <form method="POST" class="row row-cols-lg-auto g-3 align-items-center">
         <div class="input-group mb-3">
             <input class="form-control" type="search" name="first_name" placeholder="First Name Search" />
+            <input class="form-control" type="search" name="last_name" placeholder="Last Name Search" />
             <input class="btn btn-primary" type="submit" value="Search" />
         </div>
     </form>
