@@ -148,6 +148,10 @@ function get_or_create_account()
         //this should always be 0 or 1, but being safe
         $query = "SELECT * from Accounts where user_id = :uid";
         $db = getDB();
+        $stmt2 = $db->prepare("SELECT * FROM SystemProperties");
+        $stmt2->execute();
+        $res = $stmt2->fetch(PDO::FETCH_ASSOC);
+        $db_apy = $res["apy"];
         $stmt = $db->prepare($query);
         try {
             $stmt->execute([":uid" => get_user_id()]);
@@ -187,6 +191,7 @@ function get_or_create_account()
                     $account[$i]["account_number"] = $account_number;
                     $account[$i]["account_type"] = "checking";
                     $account[$i]["balance"] = 0;
+                    $account[$i]["apy"] = 0;
                     $account[$i]["created"] = time();
                 }
             } else {
@@ -194,11 +199,11 @@ function get_or_create_account()
                     $account[$i]["id"] = $result[$i]["id"];
                     $account[$i]["account_number"] = $result[$i]["account"];
                     $account[$i]["balance"] = $result[$i]["balance"];
+                    $account[$i]["apy"] = $result[$i]["apy"];
                     $account[$i]["account_type"] = $result[$i]["account_type"];
                     $account[$i]["created"] = $result[$i]["created"];
                 }
-                //$_SESSION["res"] = $result;
-                //$account = $result; //just copy it over
+                $account["apy"] = $db_apy;
             }
         } catch (PDOException $e) {
             flash("Technical error: " . var_export($e->errorInfo, true), "danger");
@@ -228,13 +233,17 @@ function make_account($init_bal, $account_type = "checking") {
     $account = [["id" => -1, "account_number" => false, "balance" => 0]];
     $db = getDB();
     $created = false;
-    $stmt = $db->prepare("INSERT INTO Accounts (account, user_id, account_type, balance) VALUES (:an, :uid, :accttype, :bal)");
+    $stmt2 = $db->prepare("SELECT * FROM SystemProperties");
+    $stmt2->execute();
+    $res = $stmt2->fetch(PDO::FETCH_ASSOC);
+    $db_apy = $res["apy"];
+    $stmt = $db->prepare("INSERT INTO Accounts (account, user_id, account_type, balance, apy) VALUES (:an, :uid, :accttype, :bal, :apy)");
     $user_id = get_user_id(); //caching a reference
     $account_number = "";
     while (!$created) {
         try {
             $account_number = get_random_str(12);
-            $stmt->execute([":an" => $account_number, ":uid" => $user_id, ":accttype" => $account_type, ":bal" => $init_bal]);
+            $stmt->execute([":an" => $account_number, ":uid" => $user_id, ":accttype" => $account_type, ":bal" => $init_bal, ":apy" => $db_apy]);
             $created = true; //if we got here it was a success, let's exit
         } catch (PDOException $e) {
             $code = se($e->errorInfo, 0, "00000", false);
@@ -254,6 +263,7 @@ function make_account($init_bal, $account_type = "checking") {
             $account[$i]["id"] = $result[$i]["id"];
             $account[$i]["account_number"] = $result[$i]["account"];
             $account[$i]["balance"] = $result[$i]["balance"];
+            $account[$i]["apy"] = $result[$i]["apy"];
             $account[$i]["account_type"] = $result[$i]["account_type"];
             $account[$i]["created"] = $result[$i]["created"];
         }

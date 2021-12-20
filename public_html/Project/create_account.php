@@ -20,6 +20,7 @@ require(__DIR__ . "/../../partials/flash.php");
         <input type="text" class="form-control" aria-describedby="startingDeposit" placeholder="Starting Balance" name="starting_balance" oninput="this.value = this.value.replace(/[^0-9]/, '')" required />
         <small id="startingDeposit" class="form-text text-muted">All accounts require a minimum of $5 starting deposit.</small>
     </div>
+    <div><label class="form-label">Current APY: <?php echo $_SESSION["user"]["account"]["apy"]; ?>%</label></div>
     <input type="submit" class="mt-3 btn btn-primary" value="Transfer" />
 </form>
 </div>

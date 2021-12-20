@@ -59,6 +59,7 @@ for ($x = 0; $x < count($_SESSION["user"]["account"]); $x++) {
         "Account Number: " + acctArray[i]["account_number"] +
         "<br />Account Type: " + capitalizeFirstLetter(acctArray[i]["account_type"]) +
         "<br />Account Balance: $" + acctArray[i]["balance"] +
+        "<br />Annual Percentage Yield: " + ((acctArray[i]["apy"] > 0) ? acctArray[i]["apy"] : "N/A") +
         "<br />Account Creation Date: " + acctArray[i]["created"] +
         '</div></div></div>' +
         // Transactions
