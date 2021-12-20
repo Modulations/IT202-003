@@ -67,6 +67,7 @@ require(__DIR__."/../lib/functions.php");
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="<?php echo get_url('admin/list_roles.php'); ?>">List Roles</a></li>
                 <li><a class="dropdown-item" href="<?php echo get_url('admin/assign_roles.php'); ?>">Assign Roles</a></li>
+                <li><a class="dropdown-item" href="<?php echo get_url('admin/lookup.php'); ?>">Lookup</a></li>
             </ul>
             </li>
         <?php } ?>
