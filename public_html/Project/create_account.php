@@ -20,7 +20,7 @@ require(__DIR__ . "/../../partials/flash.php");
         <input type="text" class="form-control" aria-describedby="startingDeposit" placeholder="Starting Balance" name="starting_balance" oninput="this.value = this.value.replace(/[^0-9]/, '')" required />
         <small id="startingDeposit" class="form-text text-muted">All accounts require a minimum of $5 starting deposit.</small>
     </div>
-    <div><label class="form-label">Current APY: <?php echo $_SESSION["user"]["account"]["apy"]; ?>%</label></div>
+    <div><label class="form-label">Current APY: <?php echo $_SESSION["user"]["apy"]; ?>%</label></div>
     <input type="submit" class="mt-3 btn btn-primary" value="Transfer" />
 </form>
 </div>
@@ -39,6 +39,7 @@ if (isset($_POST["account_type"]) && isset($_POST["starting_balance"])) { // if 
     $acct_type = se($_POST, "account_type", "", false);
     $init_bal = se($_POST, "starting_balance", "", false);
     if (intval($init_bal) >= 5) {
+        $db = getDB();
         make_account($init_bal, $acct_type);
         $sessionVar = 0;
         $balance_change = $init_bal;
