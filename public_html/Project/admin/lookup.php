@@ -24,7 +24,7 @@ if (isset($_POST["first_name"]) || isset($_POST["last_name"])) {
         $params[":last_name"] = $ln;
     }
 }
-$query .= " ORDER BY id LIMIT 10";
+//$query .= " ORDER BY id LIMIT 10";
 //echo $query;
 $db = getDB();
 $stmt = $db->prepare($query);
@@ -64,7 +64,7 @@ try {
         <tbody>
             <?php if (empty($userData)) : ?>
                 <tr>
-                    <td colspan="100%">No roles</td>
+                    <td colspan="100%">You should not see this.</td>
                 </tr>
             <?php else : ?>
                 <?php foreach ($userData as $userDat) : ?>
