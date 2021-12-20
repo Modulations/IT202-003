@@ -146,7 +146,7 @@ function get_or_create_account()
         //id is for internal references, account_number is user facing info, and balance will be a cached value of activity
         $account = [["id" => -1, "account_number" => false, "balance" => 0]];
         //this should always be 0 or 1, but being safe
-        $query = "SELECT * from Accounts where user_id = :uid";
+        $query = "SELECT * from Accounts where user_id = :uid AND active = 1";
         $db = getDB();
         $stmt2 = $db->prepare("SELECT * FROM SystemProperties");
         $stmt2->execute();
@@ -256,7 +256,7 @@ function make_account($init_bal, $account_type = "checking", $ret = false) {
                 throw $e;
             }
         }
-        $stmt = $db->prepare("SELECT * from Accounts where user_id = :uid");
+        $stmt = $db->prepare("SELECT * from Accounts where user_id = :uid AND active = 1");
         $stmt->execute([":uid" => get_user_id()]);
         $result = $stmt->fetchall(PDO::FETCH_ASSOC);
         for ($i = 0; $i < count($result); $i++) {
@@ -272,7 +272,7 @@ function make_account($init_bal, $account_type = "checking", $ret = false) {
         $_SESSION["user"]["newestAcct"] = $account_number;
     }
     if ($ret == true) {
-        $stmt = $db->prepare("SELECT * from Accounts where account = :acctnum");
+        $stmt = $db->prepare("SELECT * from Accounts where account = :acctnum AND active = 1");
         $stmt->execute([":acctnum" => $account_number]);
         $result = $stmt->fetchall(PDO::FETCH_ASSOC);
         return $result;
@@ -282,7 +282,7 @@ function make_account($init_bal, $account_type = "checking", $ret = false) {
 function refreshAccounts() {
     $account = [["id" => -1, "account_number" => false, "balance" => 0]];
     $db = getDB();
-    $stmt = $db->prepare("SELECT * from Accounts where user_id = :uid");
+    $stmt = $db->prepare("SELECT * from Accounts where user_id = :uid AND active = 1");
     $stmt->execute([":uid" => get_user_id()]);
     $result = $stmt->fetchall(PDO::FETCH_ASSOC);
     for ($i = 0; $i < count($result); $i++) {

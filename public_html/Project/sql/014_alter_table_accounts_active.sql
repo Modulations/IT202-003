@@ -1,0 +1,2 @@
+ALTER TABLE Accounts
+ADD COLUMN active INT DEFAULT 1
