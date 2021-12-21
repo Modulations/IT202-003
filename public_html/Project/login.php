@@ -63,7 +63,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
     if (!$hasError) {
         //TODO 4
         $db = getDB();
-        $stmt = $db->prepare("SELECT id, email, username, password from Users where email = :email or username = :email");
+        $stmt = $db->prepare("SELECT id, email, username, password, user_private, first_name, last_name, active from Users where email = :email or username = :email");
         try {
             $r = $stmt->execute([":email" => $email]);
             if ($r) {
@@ -72,31 +72,35 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
                     $hash = $user["password"];
                     unset($user["password"]);
                     if (password_verify($password, $hash)) {
-                        flash("Welcome $email");
-                        $_SESSION["user"] = $user;
-                        //lookup potential roles
-                        $stmt = $db->prepare("SELECT Roles.name FROM Roles 
-                        JOIN UserRoles on Roles.id = UserRoles.role_id 
-                        where UserRoles.user_id = :user_id and Roles.is_active = 1 and UserRoles.is_active = 1");
-                        $stmt->execute([":user_id" => $user["id"]]);
-                        $roles = $stmt->fetchAll(PDO::FETCH_ASSOC); //fetch all since we'll want multiple
-                        //save roles or empty array
-                        if ($roles) {
-                            $_SESSION["user"]["roles"] = $roles; //at least 1 role
+                        if ($user["active"] != 0) {
+                            flash("Welcome $email");
+                            $_SESSION["user"] = $user;
+                            //lookup potential roles
+                            $stmt = $db->prepare("SELECT Roles.name FROM Roles 
+                            JOIN UserRoles on Roles.id = UserRoles.role_id 
+                            where UserRoles.user_id = :user_id and Roles.is_active = 1 and UserRoles.is_active = 1");
+                            $stmt->execute([":user_id" => $user["id"]]);
+                            $roles = $stmt->fetchAll(PDO::FETCH_ASSOC); //fetch all since we'll want multiple
+                            //save roles or empty array
+                            if ($roles) {
+                                $_SESSION["user"]["roles"] = $roles; //at least 1 role
+                            } else {
+                                $_SESSION["user"]["roles"] = []; //no roles
+                            }
+                            // first / last name
+                            $stmt = $db->prepare("SELECT first_name, last_name, user_private FROM Users WHERE id = :user_id");
+                            $stmt->execute([":user_id" => $user["id"]]);
+                            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            $_SESSION["user"]["first_name"] = $res[0]["first_name"];
+                            $_SESSION["user"]["last_name"] = $res[0]["last_name"];
+                            $_SESSION["user"]["private"] = $res[0]["user_private"];
+                            // get or set the user's account
+                            // each user has an account, this should work retroactively with old users assigned accounts and new users given accounts
+                            get_or_create_account();
+                            die(header("Location: home.php"));
                         } else {
-                            $_SESSION["user"]["roles"] = []; //no roles
+                            flash("Sorry, your account is no longer active.");
                         }
-                        // first / last name
-                        $stmt = $db->prepare("SELECT first_name, last_name, user_private FROM Users WHERE id = :user_id");
-                        $stmt->execute([":user_id" => $user["id"]]);
-                        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                        $_SESSION["user"]["first_name"] = $res[0]["first_name"];
-                        $_SESSION["user"]["last_name"] = $res[0]["last_name"];
-                        $_SESSION["user"]["private"] = $res[0]["user_private"];
-                        // get or set the user's account
-                        // each user has an account, this should work retroactively with old users assigned accounts and new users given accounts
-                        get_or_create_account();
-                        die(header("Location: home.php"));
                     } else {
                         flash("Invalid password", "danger");
                     }

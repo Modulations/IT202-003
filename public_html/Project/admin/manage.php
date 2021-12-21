@@ -24,6 +24,21 @@ if(isset($_POST["freeze"])) {
         }
     }
 }
+if(isset($_POST["disable"])) {
+    if(!empty($_POST["disable_acct"])) {
+        $stmt = $db->prepare("SELECT active FROM Users WHERE id = " . $_POST["disable_acct"]);
+        $stmt->execute();
+        $dres = $stmt->fetch(PDO::FETCH_ASSOC);
+        $disable_status = 1 - $dres["active"];
+        $stmt = $db->prepare("UPDATE Users SET active = " . $disable_status . " WHERE id = " . $_POST["disable_acct"]);
+        $stmt->execute();
+        if ($disable_status == 0) {
+            flash("Account Disabled!");
+        } else {
+            flash("Account Enabled!");
+        }
+    }
+}
 $query = "SELECT * from Users";
 $params = [];
 if (isset($_POST["user_id"]) && !empty($_POST["user_id"])) {
@@ -130,6 +145,7 @@ try {
         }
         refinedTransactionHist[z] += "</table><br />";
     }
+    htmlElements += '<form method="POST"><input type="hidden" name="disable_acct" value=' + <?php echo $_POST["user_id"]; ?> + ' /><input class="btn btn-warning" type="submit" name="disable" value="Toggle Active Status" /></form>';
     for (var i = 0; i < acctArray.length; i++) {
         // Details
         htmlElements += '<div class="widget"><p style="line-height: 1"><h2>' +
