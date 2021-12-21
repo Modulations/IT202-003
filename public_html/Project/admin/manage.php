@@ -6,13 +6,29 @@ if (!has_role("Admin")) {
     flash("You don't have permission to view this page", "warning");
     die(header("Location: $BASE_PATH" . "home.php"));
 }
+$db = getDB();
+$acctArray = [];
+$transactionLog = [];
+if(isset($_POST["freeze"])) {
+    if(!empty($_POST["freeze_acct"])) {
+        $stmt = $db->prepare("SELECT frozen FROM Accounts WHERE id = " . $_POST["freeze_acct"]);
+        $stmt->execute();
+        $fres = $stmt->fetch(PDO::FETCH_ASSOC);
+        $frozen_status = 1 - $fres["frozen"];
+        $stmt = $db->prepare("UPDATE Accounts SET frozen = " . $frozen_status . " WHERE id = " . $_POST["freeze_acct"]);
+        $stmt->execute();
+        if ($frozen_status == 0) {
+            flash("Account Unfrozen!");
+        } else {
+            flash("Account Frozen!");
+        }
+    }
+}
 $query = "SELECT * from Users";
 $params = [];
 if (isset($_POST["user_id"]) && !empty($_POST["user_id"])) {
     $query .= " WHERE id = " . $_POST["user_id"];
 }
-//echo $query;
-$db = getDB();
 $stmt = $db->prepare($query);
 $roles = [];
 try {
@@ -32,7 +48,6 @@ try {
                     array_push($transactionLog, $xres);
                 } catch (Exception $e) {flash($e);}
             }
-            //echo json_encode($transactionLog);
         }
     } else {
         flash("No matches found", "warning");
@@ -134,6 +149,7 @@ try {
         '<div class="collapse" id="transaction' + i + '"><div class="card card-body">' +
         refinedTransactionHist[i] +
         '</div></div></div>' +
+        '<form method="POST"><input type="hidden" name="freeze_acct" value=' + acctArray[i]["id"] + ' /><input class="btn btn-warning" type="submit" name="freeze" value="Toggle Frozen Status" /></form>' +
         "</div><hr>";
     }
     var container = document.getElementById("accountWidget");

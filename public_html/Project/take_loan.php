@@ -49,22 +49,26 @@ if (isset($_POST["acct_src"]) && isset($_POST["loan_amount"])) { // if the info 
         $stmt = $db->prepare("SELECT * FROM Accounts WHERE id = " . $acct_src);
         $stmt->execute();
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
-        $userBalance = $res["balance"] + $loan_bal;
-        $stmt = $db->prepare("UPDATE Accounts SET balance = " . $userBalance . " WHERE id = " . $acct_src);
-        try {$stmt->execute();} catch (Exception $e) {flash($e);}
-        refreshAccounts();
-        // spacing
-        // spacing
-        // spacing
-        $stmt = $db->prepare("INSERT INTO Transactions (account_src, account_dest, balance_change, transaction_type, memo, expected_total) VALUES(:acctSrc, :acctDest, :balance_change, :transactionType, :memo, :expectedTotal)");
-        try {
-            $negativeone = -1; // yes
-            $res = $stmt->execute([":acctSrc" => $loan_account[0]["id"], ":acctDest" => $acct_src, ":balance_change" => (intval($loan_bal) * $negativeone), ":transactionType" => "deposit", ":memo" => "Loan Deposit", ":expectedTotal" => $loan_bal]); // for loan acct
-            $res = $stmt->execute([":acctSrc" => $acct_src, ":acctDest" => $loan_account[0]["id"], ":balance_change" => intval($loan_bal), ":transactionType" => "deposit", ":memo" => "Loan Deposit", ":expectedTotal" => $userBalance]); // for end user
-        } catch (Exception $e) {
-            flash($e . $res);
+        if ($res["frozen"] != 1) {
+            $userBalance = $res["balance"] + $loan_bal;
+            $stmt = $db->prepare("UPDATE Accounts SET balance = " . $userBalance . " WHERE id = " . $acct_src);
+            try {$stmt->execute();} catch (Exception $e) {flash($e);}
+            refreshAccounts();
+            // spacing
+            // spacing
+            // spacing
+            $stmt = $db->prepare("INSERT INTO Transactions (account_src, account_dest, balance_change, transaction_type, memo, expected_total) VALUES(:acctSrc, :acctDest, :balance_change, :transactionType, :memo, :expectedTotal)");
+            try {
+                $negativeone = -1; // yes
+                $res = $stmt->execute([":acctSrc" => $loan_account[0]["id"], ":acctDest" => $acct_src, ":balance_change" => (intval($loan_bal) * $negativeone), ":transactionType" => "deposit", ":memo" => "Loan Deposit", ":expectedTotal" => $loan_bal]); // for loan acct
+                $res = $stmt->execute([":acctSrc" => $acct_src, ":acctDest" => $loan_account[0]["id"], ":balance_change" => intval($loan_bal), ":transactionType" => "deposit", ":memo" => "Loan Deposit", ":expectedTotal" => $userBalance]); // for end user
+            } catch (Exception $e) {
+                flash($e . $res);
+            }
+            flash("Loan taken!");
+        } else {
+            flash("The target account is frozen. Please contact support.");
         }
-        flash("Loan taken!");
     } else {
         flash("Loan balance must be greater than or equal to 500.");
     }

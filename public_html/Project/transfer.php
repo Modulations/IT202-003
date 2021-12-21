@@ -77,36 +77,36 @@ if (isset($_POST["acct_src"]) && isset($_POST["acct_dest"]) && isset($_POST["bal
                 $destNewBalance = 0;
             }
         }
-        /*$sessionVar = 0;
-        for ($x = 0; $x < count($_SESSION["user"]["account"]); $x++) {
-            if ($_SESSION["user"]["account"][$x]["id"] == $acct_src) {
-                $sessionVar = $x;
-            }
-        }*/
-        $stmt = $db->prepare("SELECT * FROM Accounts WHERE id = " . $acct_src);
-        try{
-            $stmt->execute();
-            $srcRes = $stmt->fetch(PDO::FETCH_ASSOC);
-            if($srcRes["account_type"] == "loan") {
-                flash("Cannot move money from loan account.");
-            } else {
-                $userBalance = $srcRes["balance"] - $balance_change + $userExtra;
-                $stmt = $db->prepare("UPDATE Accounts SET balance = " . $destNewBalance . " WHERE id = " . $acct_dest); // THIS IS FOR THE DEST
-                try {$stmt->execute();} catch (Exception $e) {flash($e);}
-                $stmt = $db->prepare("UPDATE Accounts SET balance = " . $userBalance . " WHERE id = " . $acct_src); // THIS IS FOR THE SOURCE USER
-                try {$stmt->execute();} catch (Exception $e) {flash($e);}refreshAccounts();
-                $stmt = $db->prepare("INSERT INTO Transactions (account_src, account_dest, balance_change, transaction_type, memo, expected_total) VALUES(:acctSrc, :acctDest, :balance_change, :transactionType, :memo, :expectedTotal)");
-                try {
-                    $negativeone = -1;
-                    $res = 0;
-                    $res = $stmt->execute([":acctSrc" => $acct_src, ":acctDest" => $acct_dest, ":balance_change" => (intval($balance_change) * $negativeone), ":transactionType" => "transfer", ":memo" => $memo, ":expectedTotal" => $userBalance]);
-                    $res = $stmt->execute([":acctSrc" => $acct_dest, ":acctDest" => $acct_src, ":balance_change" => intval($balance_change), ":transactionType" => "transfer", ":memo" => $memo, ":expectedTotal" => $destNewBalance]);
-                    flash("Success!");
-                } catch (Exception $e) {
-                    flash($e . $res);
+        if ($res["frozen"] != 1) {
+            $stmt = $db->prepare("SELECT * FROM Accounts WHERE id = " . $acct_src);
+            try{
+                $stmt->execute();
+                $srcRes = $stmt->fetch(PDO::FETCH_ASSOC);
+                if($srcRes["account_type"] == "loan") {
+                    flash("Cannot move money from loan account.");
+                } else if ($srcRes["frozen"] == 1) {
+                    flash("Cannot move money from a frozen account.");
+                } else {
+                    $userBalance = $srcRes["balance"] - $balance_change + $userExtra;
+                    $stmt = $db->prepare("UPDATE Accounts SET balance = " . $destNewBalance . " WHERE id = " . $acct_dest); // THIS IS FOR THE DEST
+                    try {$stmt->execute();} catch (Exception $e) {flash($e);}
+                    $stmt = $db->prepare("UPDATE Accounts SET balance = " . $userBalance . " WHERE id = " . $acct_src); // THIS IS FOR THE SOURCE USER
+                    try {$stmt->execute();} catch (Exception $e) {flash($e);}refreshAccounts();
+                    $stmt = $db->prepare("INSERT INTO Transactions (account_src, account_dest, balance_change, transaction_type, memo, expected_total) VALUES(:acctSrc, :acctDest, :balance_change, :transactionType, :memo, :expectedTotal)");
+                    try {
+                        $negativeone = -1;
+                        $res = 0;
+                        $res = $stmt->execute([":acctSrc" => $acct_src, ":acctDest" => $acct_dest, ":balance_change" => (intval($balance_change) * $negativeone), ":transactionType" => "transfer", ":memo" => $memo, ":expectedTotal" => $userBalance]);
+                        $res = $stmt->execute([":acctSrc" => $acct_dest, ":acctDest" => $acct_src, ":balance_change" => intval($balance_change), ":transactionType" => "transfer", ":memo" => $memo, ":expectedTotal" => $destNewBalance]);
+                        flash("Success!");
+                    } catch (Exception $e) {
+                        flash($e . $res);
+                    }
                 }
-            }
-        } catch (Exception $e) {flash($e);}
+            } catch (Exception $e) {flash($e);}
+        } else {
+            flash("Cannot move money into a frozen account.");
+        }
     } catch (Exception $e) {flash($e);}
     // i know its compact and disgusting let me live
     // please i beg you
