@@ -14,7 +14,7 @@ require(__DIR__ . "/../../partials/flash.php");
     </div>
     <div class="mb-3">
         <label class="form-label" for="acct_dest">Destination Account ID</label>
-        <input type="text" class="form-control" aria-describedby="exampleId" placeholder="Account ID" name="acct_dest" oninput="this.value = this.value.replace(/[^a-z0-9]/, '')" required />
+        <input type="text" class="form-control" aria-describedby="exampleId" placeholder="Account ID" name="acct_dest" required />
         <small id="exampleId" class="form-text text-muted">Example: #0123456789AB</small>
     </div>
     <div class="mb-3">
@@ -60,10 +60,10 @@ if (isset($_POST["acct_src"]) && isset($_POST["acct_dest"]) && isset($_POST["bal
     // adjective luke butcher your own code challenge (COMEDIC GOLD) (FUN FOR THE WHOLE FAMILY) (POINT AND LAUGH)
     // handling DESTINATION acct's balance
     // shoving this first since making sure that's valid is important
-    $stmt = $db->prepare("SELECT * FROM Accounts WHERE account = " . $acct_dest);
+    $stmt = $db->prepare("SELECT * FROM Accounts WHERE account = :dest");
     // gotta make sure the ID is actually valid
     try {
-        $stmt->execute();
+        $stmt->execute([":dest" => $acct_dest]);
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
         if (count($res) == 0) {
             flash("Invalid Account Number.");
@@ -97,7 +97,7 @@ if (isset($_POST["acct_src"]) && isset($_POST["acct_dest"]) && isset($_POST["bal
                     $res = $stmt->execute([":acctSrc" => $acct_dest, ":acctDest" => $acct_src, ":balance_change" => intval($balance_change), ":transactionType" => "ext-transfer", ":memo" => $memo, ":expectedTotal" => $destNewBalance]);
                     flash("Success!");
                 } catch (Exception $e) {
-                    flash($e . $res);
+                    flash($e);
                 }
             } else {
                 flash("Cannot transfer money from a frozen account. Please contact support.");
