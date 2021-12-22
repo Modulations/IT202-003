@@ -8,12 +8,17 @@ if (!is_logged_in()) {
 if (isset($_POST["save"])) {
     $email = se($_POST, "email", null, false);
     $username = se($_POST, "username", null, false);
+    if(isset($_POST["user_private"])) {
+        $private = se($_POST, "user_private", null, false);
+    } else {
+        $private = false;
+    }
     $first_name = se($_POST, "first_name", null, false);
     $last_name = se($_POST, "last_name", null, false);
 
-    $params = [":email" => $email, ":username" => $username, ":id" => get_user_id(), ":first_name" => $first_name, ":last_name" => $last_name];
+    $params = [":email" => $email, ":username" => $username, ":id" => get_user_id(), ":first_name" => $first_name, ":last_name" => $last_name, ":privacy" => intval($private)];
     $db = getDB();
-    $stmt = $db->prepare("UPDATE Users set email = :email, username = :username, first_name = :first_name, last_name = :last_name where id = :id");
+    $stmt = $db->prepare("UPDATE Users set email = :email, username = :username, user_private = :privacy, first_name = :first_name, last_name = :last_name where id = :id");
     try {
         $stmt->execute($params);
     } catch (Exception $e) {
@@ -32,14 +37,14 @@ if (isset($_POST["save"])) {
         }
     }
     //select fresh data from table
-    $stmt = $db->prepare("SELECT id, email IFNULL(username, email) as `username` from Users where id = :id LIMIT 1");
+    $stmt = $db->prepare("SELECT id, email, IFNULL(username, email) as `username` from Users where id = :id");
     try {
         $stmt->execute([":id" => get_user_id()]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         $_SESSION["user"]["first_name"] = $first_name;
         $_SESSION["user"]["last_name"] = $last_name;
+        $_SESSION["user"]["private"] = $private;
         if ($user) {
-            //$_SESSION["user"] = $user;
             $_SESSION["user"]["email"] = $user["email"];
             $_SESSION["user"]["username"] = $user["username"];
         } else {
@@ -103,6 +108,12 @@ $username = get_username();
             <label class="form-label" for="last_name">Last Name</label>
             <input class="form-control" type="text" name="last_name" id="last_name" value="<?php echo $_SESSION["user"]["last_name"] ?>" />
         </div>
+        <div class="form-check">
+            <label class="form-check-label" for="account_private">
+                Private
+            </label>
+            <input class="form-check-input" type="checkbox" value="<?php echo (($_SESSION["user"]["private"]) ? 1 : 0); ?>" name="user_private" id="user_private" <?php if ($_SESSION["user"]["private"] == 1) echo "checked"; ?>>
+        </div>
         <div class="mb-3">
             <label class="form-label" for="email">Email</label>
             <input class="form-control" type="email" name="email" id="email" value="<?php se($email); ?>" />
@@ -158,6 +169,12 @@ $username = get_username();
         }
         return isValid;
     }
+    //console.log(JSON.stringify(`<?php echo json_encode($_POST); ?>`));
+    doc = document.getElementById("user_private");
+    doc.addEventListener('click', (e) => {
+        doc.value = doc.checked;
+        //console.log(doc.value, doc.checked);
+    });
 </script>
 <?php
 require_once(__DIR__ . "/../../partials/flash.php");

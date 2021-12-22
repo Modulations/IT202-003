@@ -382,61 +382,219 @@ https://docs.google.com/document/d/1e5xIGBrQflycZfNOabpNzGQ0rYx7pJv2nA6-BG-YSnA/
 </td>
 </tr></td></tr></table>
 
-- Milestone 4
-  - User can set their profile to be public or private (will need another column in Users table)
-    - If public, hide email address from other users
-  - User will be able open a savings account
-    - System will generate a 12 digit/character account number per the existing rules (see Checking Account above)
-    - System will associate the account to the user
-    - Account type will be set as savings
-    - Will require a minimum deposit of $5 (from the world account)
-      - Entry will be recorded in the Transaction table in a transaction pair (per notes below)
-      - Account Balance will be updated based on SUM of BalanceChange of AccountSrc
-    - System sets an APY that’ll be used to calculate monthly interest based on the balance of the account
-      - Recommended to create a table for “system properties” and have this value stored there and fetched when needed, this will allow you to have an admin account change the value in the future)
-    - User will see user-friendly error messages when appropriate
-    - User will see user-friendly success message when account is created successfully
-      - Redirect user to their Accounts page
-  - User will be able to take out a loan
-    - System will generate a 12 digit/character account number per the existing rules (see Checking Account above)
-    - Account type will be set as loan
-    - Will require a minimum value of $500
-    - System will show an APY (before the user submits the form)
-      - This will be used to add interest to the loan account
-      - Recommended to create a table for “system properties” and have this value stored there and fetched when needed, this will allow you to have an admin account change the value in the future)
-    - Form will have a dropdown of the user’s accounts of which to deposit the money into
-    - Special Case for Loans:
-      - Loans will show with a positive balance of what’s required to pay off (although it is a negative since the user owes it)
-    - User will transfer funds to the loan account to pay it off
-    - Transfers will continue to be recorded in the Transactions table
-    - Loan account’s balance will be the balance minus any transfers to this account
-    - Interest will be applied to the current loan balance and add to it (causing the user to owe more)
-    - A loan with 0 balance will be considered paid off and will not accrue interest and will be eligible to be marked as closed
-    - User can’t transfer more money from a loan once it’s been opened and a loan account should not appear in the Account Source dropdowns
-  - User will see user-friendly error messages when appropriate
-  - User will see user-friendly success message when account is created successfully
-    - Redirect user to their Accounts page
-  - Listing accounts and/or viewing Account Details should show any applicable APY or “-” if none is set for the particular account (may alternatively just hide the display for these types)
-  - User will be able to close an account
-    - User must transfer or withdraw all funds out of the account before doing so
-    - Account should have a column “active” that will get set as false.
-      - All queries for Accounts should be updated to pull only “active” = true accounts (i.e., dropdowns, My Accounts, etc)
-      - Do not delete the record, this is a soft delete so it doesn’t break transactions
-    - Closed accounts don’t show up anymore
-    - If the account is a loan, it must be paid off in full first
-  - Admin role (leave this section for last)
-    - Will be able to search for users by firstname and/or lastname
-    - Will be able to look-up specific account numbers (partial match).
-    - Will be able to see the transaction history of an account
-    - Will be able to freeze an account (this is similar to disable/delete but it’s a different column)
-      - Frozen accounts still show in results, but they can’t be interacted with.
-      - [Dev note]: Will want to add a column to Accounts table called frozen and default it to false
-        - Update transactions logic to not allow frozen accounts to be used for a transaction
-    - Will be able to open accounts for specific users
-    - Will be able to deactivate a user
-      - Requires a new column on the Users table (i.e., is_active)
-      - Deactivated users will be restricted from logging in
-        - “Sorry your account is no longer active”
+
+<table>
+<tr><td>Milestone 4</td></tr><tr><td>
+<table>
+<tr><td>F1 - Private Account Setting (2021-12-19)</td></tr>
+<tr><td>Status: complete</td></tr>
+<tr><td>Links:<p>
+
+ [lad5-prod.herokuapp.com/Project/profile.php](lad5-prod.herokuapp.com/Project/profile.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [TODO](TODO)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F1 - Private / Public Button</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147011687-c611fe2d-6dae-4637-b891-3445ec07a397.png">
+<p>Shows profile php</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<table>
+<tr><td>F2 - Open Savings Account (2021-12-19)</td></tr>
+<tr><td>Status: complete</td></tr>
+<tr><td>Links:<p>
+
+ [lad5-prod.herokuapp.com/Project/create_account.php](lad5-prod.herokuapp.com/Project/create_account.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [TODO](TODO)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F2 - Create APY & Savings Acct</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147011804-2d5c3fd3-5ef3-4764-9181-7255850f30f1.png">
+<p>Shows Savings Acct & APY</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<table>
+<tr><td>F3 - Loans (2021-12-19)</td></tr>
+<tr><td>Status: complete</td></tr>
+<tr><td>Links:<p>
+
+ [lad5-prod.herokuapp.com/Project/take_loan.php](lad5-prod.herokuapp.com/Project/take_loan.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [TODO](TODO)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F3 - Take Loan</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147011913-71a7c50f-07a8-42fd-9799-6b17db94fec8.png">
+<p>Taking loan</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr><td>
+<table>
+<tr><td>F3 - Pay Loan Off</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147011967-016d9b64-8829-454c-a1c1-6cac96199aa0.png">
+<p></p>
+</td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147012032-3df6a634-031e-44f5-86d0-7745164bd90c.png">
+<p></p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<table>
+<tr><td>F4 - Closing Accounts (2021-12-19)</td></tr>
+<tr><td>Status: complete</td></tr>
+<tr><td>Links:<p>
+
+ [lad5-prod.herokuapp.com/Project/close_account.php](lad5-prod.herokuapp.com/Project/close_account.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [TODO](TODO)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F4 - Close Account</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147012196-9acb3caf-931f-4a37-9fc9-21b5a354107d.png">
+<p>Account does not close if it has money in it</p>
+</td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147012266-32ddf653-9828-4d97-a135-6828e684e34f.png">
+<p>Account closes if no money in it</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<table>
+<tr><td>F5 - Admin Role (2021-12-21)</td></tr>
+<tr><td>Status: complete</td></tr>
+<tr><td>Links:<p>
+
+ [lad5-prod.herokuapp.com/Project/admin/manage.php](lad5-prod.herokuapp.com/Project/admin/manage.php)</p><p>
+
+ [lad5-prod.herokuapp.com/Project/admin/lookup.php](lad5-prod.herokuapp.com/Project/admin/lookup.php)</p></td></tr>
+<tr><td>PRs:<p>
+
+ [TODO](TODO)</p></td></tr>
+<tr><td>
+<table>
+<tr><td>F5 - Account Freezing</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147012383-21ffe1e1-0147-4cef-87ca-8a940c53d6c0.png">
+<p></p>
+</td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147012452-6779f25b-4b03-4ec6-921b-f2d57ab82465.png">
+<p></p>
+</td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147012429-c9089c7b-6a22-46d4-a103-10ebd1bea785.png">
+<p></p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr><td>
+<table>
+<tr><td>F5 - Account Disabling</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147012452-6779f25b-4b03-4ec6-921b-f2d57ab82465.png">
+<p></p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr><td>
+<table>
+<tr><td>F5 - Account Searching</td></tr>
+<tr><td>Status: 
+<img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=completed"></td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147012697-0c763ea6-6415-470e-8b9c-e141a3d963ee.png">
+<p></p>
+</td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147012731-08fb3ff1-0c4e-4f25-aa7e-f94cb956a430.png">
+<p>First Name Test</p>
+</td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147012768-bc4e6c54-e1a6-4486-bab7-7406feba9781.png">
+<p>Last Name Test</p>
+</td></tr>
+
+<tr><td>
+<img width="768px" src="https://user-images.githubusercontent.com/19559183/147012812-441e8cfc-1c24-4fe1-8df2-c2ee12bd1258.png">
+<p>Full Name Test</p>
+</td></tr>
+
+</td>
+</tr>
+</table>
+</td>
+</tr></td></tr></table>
 
 
 ### Intructions

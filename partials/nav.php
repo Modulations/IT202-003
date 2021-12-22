@@ -49,6 +49,9 @@ require(__DIR__."/../lib/functions.php");
                 <li class="nav-item"><a class="nav-link" href="<?php echo get_url('withdraw.php')?>">Withdraw</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo get_url('transfer.php')?>">Move Money</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?php echo get_url('ext-transfer.php')?>">Send Money</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li class="nav-item"><a class="nav-link" href="<?php echo get_url('take_loan.php')?>">Take Loan</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?php echo get_url('close_account.php')?>">Close Account</a></li>
             </ul>
             </li>
         <?php } ?>
@@ -64,6 +67,8 @@ require(__DIR__."/../lib/functions.php");
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="<?php echo get_url('admin/list_roles.php'); ?>">List Roles</a></li>
                 <li><a class="dropdown-item" href="<?php echo get_url('admin/assign_roles.php'); ?>">Assign Roles</a></li>
+                <li><a class="dropdown-item" href="<?php echo get_url('admin/lookup.php'); ?>">Lookup</a></li>
+                <li><a class="dropdown-item" href="<?php echo get_url('admin/manage.php'); ?>">Manage</a></li>
             </ul>
             </li>
         <?php } ?>
