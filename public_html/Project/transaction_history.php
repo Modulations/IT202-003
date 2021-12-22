@@ -15,7 +15,7 @@ require(__DIR__ . "/../../partials/flash.php");
 $transactionLog = [];
 $db = getDB();
 for ($x = 0; $x < count($_SESSION["user"]["account"]); $x++) {
-    $stmt = $db->prepare("SELECT * FROM Transactions WHERE account_src = " . $_SESSION["user"]["account"][$x]["id"] . " LIMIT 10");
+    $stmt = $db->prepare("SELECT * FROM Transactions WHERE account_src = " . $_SESSION["user"]["account"][$x]["id"] . " ORDER BY created DESC LIMIT 10");
     try {
         $stmt->execute();
         $res = $stmt->fetchall(PDO::FETCH_ASSOC);

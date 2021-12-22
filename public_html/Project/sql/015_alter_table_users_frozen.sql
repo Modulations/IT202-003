@@ -1,0 +1,2 @@
+ALTER TABLE Accounts
+ADD COLUMN frozen INT DEFAULT 0

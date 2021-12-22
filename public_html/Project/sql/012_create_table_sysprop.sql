@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS SystemProperties(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    apy DOUBLE
+)

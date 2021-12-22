@@ -146,8 +146,12 @@ function get_or_create_account()
         //id is for internal references, account_number is user facing info, and balance will be a cached value of activity
         $account = [["id" => -1, "account_number" => false, "balance" => 0]];
         //this should always be 0 or 1, but being safe
-        $query = "SELECT * from Accounts where user_id = :uid";
+        $query = "SELECT * from Accounts where user_id = :uid AND active = 1";
         $db = getDB();
+        $stmt2 = $db->prepare("SELECT * FROM SystemProperties");
+        $stmt2->execute();
+        $res = $stmt2->fetch(PDO::FETCH_ASSOC);
+        $db_apy = $res["apy"];
         $stmt = $db->prepare($query);
         try {
             $stmt->execute([":uid" => get_user_id()]);
@@ -187,6 +191,7 @@ function get_or_create_account()
                     $account[$i]["account_number"] = $account_number;
                     $account[$i]["account_type"] = "checking";
                     $account[$i]["balance"] = 0;
+                    $account[$i]["apy"] = 0;
                     $account[$i]["created"] = time();
                 }
             } else {
@@ -194,16 +199,16 @@ function get_or_create_account()
                     $account[$i]["id"] = $result[$i]["id"];
                     $account[$i]["account_number"] = $result[$i]["account"];
                     $account[$i]["balance"] = $result[$i]["balance"];
+                    $account[$i]["apy"] = $result[$i]["apy"];
                     $account[$i]["account_type"] = $result[$i]["account_type"];
                     $account[$i]["created"] = $result[$i]["created"];
                 }
-                //$_SESSION["res"] = $result;
-                //$account = $result; //just copy it over
             }
         } catch (PDOException $e) {
             flash("Technical error: " . var_export($e->errorInfo, true), "danger");
         }
         $_SESSION["user"]["account"] = $account; //storing the account info as a key under the user session
+        $_SESSION["user"]["apy"] = $db_apy;
         //Note: if there's an error it'll initialize to the "empty" definition around line 161
 
     } else {
@@ -224,17 +229,21 @@ function get_user_account_id()
     }
     return 0;
 }
-function make_account($init_bal, $account_type = "checking") {
+function make_account($init_bal, $account_type = "checking", $ret = false) {
     $account = [["id" => -1, "account_number" => false, "balance" => 0]];
     $db = getDB();
     $created = false;
-    $stmt = $db->prepare("INSERT INTO Accounts (account, user_id, account_type, balance) VALUES (:an, :uid, :accttype, :bal)");
+    $stmt2 = $db->prepare("SELECT * FROM SystemProperties");
+    $stmt2->execute();
+    $res = $stmt2->fetch(PDO::FETCH_ASSOC);
+    $db_apy = $res["apy"];
+    $stmt = $db->prepare("INSERT INTO Accounts (account, user_id, account_type, balance, apy) VALUES (:an, :uid, :accttype, :bal, :apy)");
     $user_id = get_user_id(); //caching a reference
     $account_number = "";
     while (!$created) {
         try {
             $account_number = get_random_str(12);
-            $stmt->execute([":an" => $account_number, ":uid" => $user_id, ":accttype" => $account_type, ":bal" => $init_bal]);
+            $stmt->execute([":an" => $account_number, ":uid" => $user_id, ":accttype" => $account_type, ":bal" => $init_bal, ":apy" => $db_apy]);
             $created = true; //if we got here it was a success, let's exit
         } catch (PDOException $e) {
             $code = se($e->errorInfo, 0, "00000", false);
@@ -247,17 +256,47 @@ function make_account($init_bal, $account_type = "checking") {
                 throw $e;
             }
         }
-        $stmt = $db->prepare("SELECT * from Accounts where user_id = :uid");
+        $stmt = $db->prepare("SELECT * from Accounts where user_id = :uid AND active = 1");
         $stmt->execute([":uid" => get_user_id()]);
         $result = $stmt->fetchall(PDO::FETCH_ASSOC);
         for ($i = 0; $i < count($result); $i++) {
             $account[$i]["id"] = $result[$i]["id"];
             $account[$i]["account_number"] = $result[$i]["account"];
             $account[$i]["balance"] = $result[$i]["balance"];
+            $account[$i]["apy"] = $result[$i]["apy"];
             $account[$i]["account_type"] = $result[$i]["account_type"];
             $account[$i]["created"] = $result[$i]["created"];
         }
         $_SESSION["user"]["account"] = $account;
+        $_SESSION["user"]["apy"] = $db_apy;
         $_SESSION["user"]["newestAcct"] = $account_number;
     }
+    if ($ret == true) {
+        $stmt = $db->prepare("SELECT * from Accounts where account = :acctnum AND active = 1");
+        $stmt->execute([":acctnum" => $account_number]);
+        $result = $stmt->fetchall(PDO::FETCH_ASSOC);
+        return $result;
+    }
+}
+
+function refreshAccounts() {
+    $account = [["id" => -1, "account_number" => false, "balance" => 0]];
+    $db = getDB();
+    $stmt = $db->prepare("SELECT * from Accounts where user_id = :uid AND active = 1");
+    $stmt->execute([":uid" => get_user_id()]);
+    $result = $stmt->fetchall(PDO::FETCH_ASSOC);
+    for ($i = 0; $i < count($result); $i++) {
+        $account[$i]["id"] = $result[$i]["id"];
+        $account[$i]["account_number"] = $result[$i]["account"];
+        $account[$i]["balance"] = $result[$i]["balance"];
+        $account[$i]["apy"] = $result[$i]["apy"];
+        $account[$i]["account_type"] = $result[$i]["account_type"];
+        $account[$i]["created"] = $result[$i]["created"];
+    }
+    $stmt2 = $db->prepare("SELECT * FROM SystemProperties");
+    $stmt2->execute();
+    $res = $stmt2->fetch(PDO::FETCH_ASSOC);
+    $db_apy = $res["apy"];
+    $_SESSION["user"]["account"] = $account;
+    $_SESSION["user"]["apy"] = $db_apy;
 }

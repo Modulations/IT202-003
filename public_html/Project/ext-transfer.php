@@ -66,32 +66,41 @@ if (isset($_POST["acct_src"]) && isset($_POST["acct_dest"]) && isset($_POST["bal
         $stmt->execute();
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
         if (count($res) == 0) {
-            flash("Invalid Account ID.");
+            flash("Invalid Account Number.");
+        } else if ($res["frozen"] == 1) {
+            flash("Cannot transfer money to a frozen account.");
         } else {
-            $destNewBalance = $res["balance"] += $balance_change;
-            $stmt = $db->prepare("UPDATE Accounts SET balance = " . $destNewBalance . " WHERE id = " . $res["id"]); // THIS IS FOR THE DEST
-            try {$stmt->execute();} catch (Exception $e) {flash($e);}
-            $sessionVar = 0;
-            for ($x = 0; $x < count($_SESSION["user"]["account"]); $x++) {
-                if ($_SESSION["user"]["account"][$x]["id"] == $acct_src) {
-                    $sessionVar = $x;
+            $stmt = $db->prepare("SELECT * FROM Accounts WHERE id = " . $acct_src);
+            $stmt->execute();
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($res["frozen"] != 1) {
+                $destNewBalance = $res["balance"] += $balance_change;
+                $stmt = $db->prepare("UPDATE Accounts SET balance = " . $destNewBalance . " WHERE id = " . $res["id"]); // THIS IS FOR THE DEST
+                try {$stmt->execute();} catch (Exception $e) {flash($e);}
+                $sessionVar = 0;
+                for ($x = 0; $x < count($_SESSION["user"]["account"]); $x++) {
+                    if ($_SESSION["user"]["account"][$x]["id"] == $acct_src) {
+                        $sessionVar = $x;
+                    }
                 }
-            }
-            $userBalance = $_SESSION["user"]["account"][$sessionVar]["balance"] - $balance_change;
-            $_SESSION["user"]["account"][$sessionVar]["balance"] -= $balance_change;
-            $stmt = $db->prepare("UPDATE Accounts SET balance = " . $userBalance . " WHERE id = " . $acct_src); // THIS IS FOR THE SOURCE USER
-            try {$stmt->execute();} catch (Exception $e) {flash($e);}
-            // TODO it has just occured to me that it is possible to send negative amounts of money.
-            // TODO full disclosure i am not going to fix that
-            $stmt = $db->prepare("INSERT INTO Transactions (account_src, account_dest, balance_change, transaction_type, memo, expected_total) VALUES(:acctSrc, :acctDest, :balance_change, :transactionType, :memo, :expectedTotal)");
-            try {
-                $negativeone = -1;
-                $res = 0;
-                $res = $stmt->execute([":acctSrc" => $acct_src, ":acctDest" => $acct_dest, ":balance_change" => (intval($balance_change) * $negativeone), ":transactionType" => "ext-transfer", ":memo" => $memo, ":expectedTotal" => $userBalance]);
-                $res = $stmt->execute([":acctSrc" => $acct_dest, ":acctDest" => $acct_src, ":balance_change" => intval($balance_change), ":transactionType" => "ext-transfer", ":memo" => $memo, ":expectedTotal" => $destNewBalance]);
-                flash("Success!");
-            } catch (Exception $e) {
-                flash($e . $res);
+                $userBalance = $_SESSION["user"]["account"][$sessionVar]["balance"] - $balance_change;
+                $_SESSION["user"]["account"][$sessionVar]["balance"] -= $balance_change;
+                $stmt = $db->prepare("UPDATE Accounts SET balance = " . $userBalance . " WHERE id = " . $acct_src); // THIS IS FOR THE SOURCE USER
+                try {$stmt->execute();} catch (Exception $e) {flash($e);}
+                // TODO it has just occured to me that it is possible to send negative amounts of money.
+                // TODO full disclosure i am not going to fix that
+                $stmt = $db->prepare("INSERT INTO Transactions (account_src, account_dest, balance_change, transaction_type, memo, expected_total) VALUES(:acctSrc, :acctDest, :balance_change, :transactionType, :memo, :expectedTotal)");
+                try {
+                    $negativeone = -1;
+                    $res = 0;
+                    $res = $stmt->execute([":acctSrc" => $acct_src, ":acctDest" => $acct_dest, ":balance_change" => (intval($balance_change) * $negativeone), ":transactionType" => "ext-transfer", ":memo" => $memo, ":expectedTotal" => $userBalance]);
+                    $res = $stmt->execute([":acctSrc" => $acct_dest, ":acctDest" => $acct_src, ":balance_change" => intval($balance_change), ":transactionType" => "ext-transfer", ":memo" => $memo, ":expectedTotal" => $destNewBalance]);
+                    flash("Success!");
+                } catch (Exception $e) {
+                    flash($e . $res);
+                }
+            } else {
+                flash("Cannot transfer money from a frozen account. Please contact support.");
             }
         }
     } catch (Exception $e) {flash($e);}

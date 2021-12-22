@@ -52,38 +52,45 @@ if (isset($_POST["acct_src"]) && isset($_POST["balance_change"]) && isset($_POST
     }
     $db = getDB();
     // tragic luke copy your own code challenge (INFALLIBLE) (AGONIZING) (NOT COPY-PASTING AND EDITING)
-    $sessionVar = 0;
-    for ($x = 0; $x < count($_SESSION["user"]["account"]); $x++) {
-        if ($_SESSION["user"]["account"][$x]["id"] == $acct_src) {
-            $sessionVar = $x;
+    $stmt = $db->prepare("SELECT * FROM Accounts WHERE id = " . $acct_src);
+    $stmt->execute();
+    $res = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($res["frozen"] != 1) {
+        $sessionVar = 0;
+        for ($x = 0; $x < count($_SESSION["user"]["account"]); $x++) {
+            if ($_SESSION["user"]["account"][$x]["id"] == $acct_src) {
+                $sessionVar = $x;
+            }
         }
-    }
-    $userBalance = $_SESSION["user"]["account"][$sessionVar]["balance"] - $balance_change;
-    $_SESSION["user"]["account"][$sessionVar]["balance"] -= $balance_change;
-    $stmt = $db->prepare("UPDATE Accounts SET balance = " . $userBalance . " WHERE id = " . $acct_src); // THIS IS FOR THE USER
-    try {$stmt->execute();} catch (Exception $e) {flash($e);}
-    // handling world acct's balance
-    // spacing
-    $stmt = $db->prepare("SELECT balance FROM Accounts WHERE id = 1");
-    $worldBalance = 0;
-    try {
-        $stmt->execute();
-        $worldRes = $stmt->fetchall(PDO::FETCH_ASSOC);
-        $worldBalance = $worldRes[0]["balance"] + $balance_change;
-        $stmt = $db->prepare("UPDATE Accounts SET balance = " . $worldBalance . " WHERE id = 1"); // THIS IS FOR THE WORLD
+        $userBalance = $_SESSION["user"]["account"][$sessionVar]["balance"] - $balance_change;
+        $_SESSION["user"]["account"][$sessionVar]["balance"] -= $balance_change;
+        $stmt = $db->prepare("UPDATE Accounts SET balance = " . $userBalance . " WHERE id = " . $acct_src); // THIS IS FOR THE USER
         try {$stmt->execute();} catch (Exception $e) {flash($e);}
-    } catch (Exception $e) {flash($e);}
-    // i know its compact and disgusting let me live
-    // please i beg you
-    $stmt = $db->prepare("INSERT INTO Transactions (account_src, account_dest, balance_change, transaction_type, memo, expected_total) VALUES(:acctSrc, :acctDest, :balance_change, :transactionType, :memo, :expectedTotal)");
-    try {
-        $negativeone = -1;
-        $res = 0;
-        $res = $stmt->execute([":acctSrc" => $acct_src, ":acctDest" => 1, ":balance_change" => (intval($balance_change) * $negativeone), ":transactionType" => "withdraw", ":memo" => $memo, ":expectedTotal" => $userBalance]);
-        $res = $stmt->execute([":acctSrc" => 1, ":acctDest" => $acct_src, ":balance_change" => intval($balance_change), ":transactionType" => "withdraw", ":memo" => $memo, ":expectedTotal" => $worldBalance]);
-        flash("Success!");
-    } catch (Exception $e) {
-        flash($e . $res);
+        // handling world acct's balance
+        // spacing
+        $stmt = $db->prepare("SELECT balance FROM Accounts WHERE id = 1");
+        $worldBalance = 0;
+        try {
+            $stmt->execute();
+            $worldRes = $stmt->fetchall(PDO::FETCH_ASSOC);
+            $worldBalance = $worldRes[0]["balance"] + $balance_change;
+            $stmt = $db->prepare("UPDATE Accounts SET balance = " . $worldBalance . " WHERE id = 1"); // THIS IS FOR THE WORLD
+            try {$stmt->execute();} catch (Exception $e) {flash($e);}
+        } catch (Exception $e) {flash($e);}
+        // i know its compact and disgusting let me live
+        // please i beg you
+        $stmt = $db->prepare("INSERT INTO Transactions (account_src, account_dest, balance_change, transaction_type, memo, expected_total) VALUES(:acctSrc, :acctDest, :balance_change, :transactionType, :memo, :expectedTotal)");
+        try {
+            $negativeone = -1;
+            $res = 0;
+            $res = $stmt->execute([":acctSrc" => $acct_src, ":acctDest" => 1, ":balance_change" => (intval($balance_change) * $negativeone), ":transactionType" => "withdraw", ":memo" => $memo, ":expectedTotal" => $userBalance]);
+            $res = $stmt->execute([":acctSrc" => 1, ":acctDest" => $acct_src, ":balance_change" => intval($balance_change), ":transactionType" => "withdraw", ":memo" => $memo, ":expectedTotal" => $worldBalance]);
+            flash("Success!");
+        } catch (Exception $e) {
+            flash($e . $res);
+        }
+    } else {
+        flash("Cannot withdraw money from a frozen account. Please contact support.");
     }
 }
 ?>
